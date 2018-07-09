@@ -2,7 +2,7 @@ package com.teamA.data;
 
 import java.time.LocalDate;
 
-public class Match extends Entity {
+public class Match extends AbstractEntity {
 
     private Team firstTeam;
     private Team secondTeam;

@@ -1,6 +1,6 @@
 package com.teamA.data;
 
-public class Mundial extends Entity {
+public class Mundial extends AbstractEntity {
 
     private String name;
     private String location;

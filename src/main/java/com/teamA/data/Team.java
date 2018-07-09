@@ -1,6 +1,6 @@
 package com.teamA.data;
 
-public class Team extends Entity {
+public class Team extends AbstractEntity {
 
     private String name;
 

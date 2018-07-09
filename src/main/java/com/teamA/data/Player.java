@@ -1,19 +1,37 @@
 package com.teamA.data;
 
-public class Player extends Entity {
+import javax.persistence.*;
+import javax.persistence.Entity;
+
+@Entity
+public class Player extends AbstractEntity {
 
     private String firstName;
     private String lastName;
-    int birthYear;
+    private int birthYear;
 
+    Player(String firstName, String lastName, int birthYear) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthYear = birthYear;
+    }
+
+    Player(long id, String firstName, String lastName, int birthYear) {
+        super(id);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthYear = birthYear;
+    }
+
+    protected Player() {}
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+//    public void setFirstName(String firstName) {
+//        this.firstName = firstName;
+//    }
 
     public String getLastName() {
         return lastName;
@@ -27,9 +45,9 @@ public class Player extends Entity {
         return birthYear;
     }
 
-    public void setBirthYear(int birthYear) {
-        this.birthYear = birthYear;
-    }
+//    public void setBirthYear(int birthYear) {
+//        this.birthYear = birthYear;
+//    }
 
     @Override
     public String toString() {
