@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MatchService {
 
-    Player createMatch(Team firstTeam, Team secondTeam, String location) throws PersistenceFailure;
+    Match createMatch(Team firstTeam, Team secondTeam, String location) throws PersistenceFailure;
     boolean registerGoal(Team shooters) throws PersistenceFailure;
     boolean registerScore(String firstTeamScore, String secondTeamScore) throws PersistenceFailure;
     boolean changeLocation(Match match, String location) throws PersistenceFailure;

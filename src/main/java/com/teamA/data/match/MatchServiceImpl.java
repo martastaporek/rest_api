@@ -5,6 +5,7 @@ import com.teamA.data.player.Player;
 import com.teamA.data.team.Team;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.util.List;
 
 public class MatchServiceImpl implements MatchService {
@@ -16,8 +17,20 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Player createMatch(Team firstTeam, Team secondTeam, String location) throws PersistenceFailure {
-        return null;
+    public Match createMatch(Team firstTeam, Team secondTeam, String location) throws PersistenceFailure {
+
+        try {
+            long currentMaxId = getMaxId();
+            Match match = new Match(firstTeam, secondTeam, location);
+            match.setId(currentMaxId+1);
+            if (! save(match)) {
+                throw new PersistenceFailure();
+            }
+            return match;
+        } catch (PersistenceFailure notUsed) {
+            String failureInfo = String.format("the match %s %s could not be created", firstTeam, secondTeam);
+            throw new PersistenceFailure(failureInfo);
+        }
     }
 
     @Override
@@ -48,5 +61,35 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public List<Match> loadAll() throws PersistenceFailure {
         return null;
+    }
+
+    private boolean save(Match match) {
+        EntityTransaction transaction = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            entityManager.persist(match);
+            transaction.commit();
+        } catch (Exception notUsed) {
+            rollBackTransaction(transaction);
+            return false;
+        }
+        return true;
+    }
+
+    private long getMaxId() {
+        try {
+            return entityManager.createQuery("select max(m.id) from match m", Long.class).getSingleResult();
+        } catch (NullPointerException notUsed) {
+            return 1;
+        }
+    }
+
+    private void rollBackTransaction(EntityTransaction transaction) {
+        if (transaction != null) {
+            try {
+                transaction.rollback();
+            } catch (Exception notUsed) {}
+        }
     }
 }
