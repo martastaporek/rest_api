@@ -36,16 +36,16 @@ public class RootImpl implements Root {
 
 
         try {
-            Player player = playerService.createPlayer("Pablo", "Horny", "1995");
+//            Player player = playerService.createPlayer("Pablo", "Horny", "1995");
 //            Team team = teamService.createTeam("Poland");
 //            Team teamEng = teamService.createTeam("England");
 
 //            System.out.println(team);
 //            System.out.println(teamEng);
 
-            System.out.println(player);
+//            System.out.println(player);
 
-            Player loaded = playerService.loadPlayer("2");
+            Player loaded = playerService.loadPlayer("3");
 
             System.out.println(loaded);
 
@@ -89,25 +89,24 @@ public class RootImpl implements Root {
     private void makeFunWithMatch(ServiceFactory serviceFactory, EntityManager entityManager) {
 
         MatchService matchService = serviceFactory.createMatchService(MatchServiceImpl.class);
+        TeamService teamService = serviceFactory.createTeamService(TeamServiceImpl.class);
 
-//        EntityTransaction transaction = entityManager.getTransaction();
-//        transaction.begin();
-//
-//        Team firstTeam = new Team("Jajka");
-//        Team secondTeam = new Team("Lolki");
-//        firstTeam.setId(10000);
-//        secondTeam.setId(100001);
-//
-//        entityManager.persist(firstTeam);
-//        entityManager.persist(secondTeam);
-//
-//        transaction.commit();
 
-//        Match match = matchService.createMatch(firstTeam, secondTeam,"Cracow");
 
-        Match match;
+
+
+
+
         try {
-            match = matchService.loadMatch("2");
+
+            Team team1 = teamService.createTeam("England");
+
+            Team team2 = teamService.createTeam("Germany");
+
+            Match match = matchService.createMatch(team1, team2,"Krakow");
+
+
+//            match = matchService.loadMatch("2");
             System.out.println("Created match: " + match);
 
             matchService.changeLocation(match, "Poznan");

@@ -81,7 +81,7 @@ public class TeamServiceImpl implements TeamService {
 
     private long getMaxId() {
         try {
-            return entityManager.createQuery("select max(t.id) from team t", Long.class).getSingleResult();
+            return entityManager.createQuery("select max(e.id) from AbstractEntity e", Long.class).getSingleResult();
         } catch (NullPointerException notUsed) {
             return 1;
         }

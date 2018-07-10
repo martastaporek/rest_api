@@ -67,7 +67,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     private long getMaxId() {
         try {
-            return entityManager.createQuery("select max(p.id) from player p", Long.class).getSingleResult();
+            return entityManager.createQuery("select max(e.id) from AbstractEntity e", Long.class).getSingleResult();
         } catch (NullPointerException notUsed) {
             return 1;
         }

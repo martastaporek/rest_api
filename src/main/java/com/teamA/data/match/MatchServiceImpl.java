@@ -156,7 +156,7 @@ public class MatchServiceImpl implements MatchService {
 
     private long getMaxId() {
         try {
-            return entityManager.createQuery("select max(m.id) from match m", Long.class).getSingleResult();
+            return entityManager.createQuery("select max(e.id) from AbstractEntity e", Long.class).getSingleResult();
         } catch (NullPointerException notUsed) {
             return 1;
         }
