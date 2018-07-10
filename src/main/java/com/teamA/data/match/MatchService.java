@@ -3,7 +3,6 @@ package com.teamA.data.match;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.team.Team;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +17,7 @@ public interface MatchService {
     boolean registerDate(Match match, Date date);
     boolean changeLocation(Match match, String location);
     boolean changeLocation(String matchId, String location);
+    boolean saveMatch(Match match);
     Match loadMatch(String matchId) throws PersistenceFailure;
     List<Match> loadAll() throws PersistenceFailure;
 

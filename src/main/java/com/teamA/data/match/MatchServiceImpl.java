@@ -11,6 +11,7 @@ import java.util.List;
 public class MatchServiceImpl implements MatchService {
 
     private final EntityManager entityManager;
+//    private final TeamService!!!
 
     public MatchServiceImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -112,6 +113,11 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public boolean changeLocation(String matchId, String location) {
         return false;
+    }
+
+    @Override
+    public boolean saveMatch(Match match) {
+        return save(match);
     }
 
     @Override
