@@ -1,11 +1,11 @@
 package com.teamA;
 
-import com.teamA.controllersFactory.ControllerFactory;
-import com.teamA.controllersFactory.ControllerFactoryImpl;
+import com.teamA.serviceFactory.ServiceFactory;
+import com.teamA.serviceFactory.ServiceFactoryImpl;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.player.Player;
-import com.teamA.data.player.PlayerController;
-import com.teamA.data.player.PlayerControllerImpl;
+import com.teamA.data.player.PlayerService;
+import com.teamA.data.player.PlayerServiceImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -23,17 +23,17 @@ public class RootImpl implements Root {
     public void run() {
 
         EntityManager entityManager = createEntityManager();
-        ControllerFactory controllerFactory = createControllerFactory(entityManager);
-        PlayerController playerController = controllerFactory.createPlayerController(PlayerControllerImpl.class);
+        ServiceFactory serviceFactory = createControllerFactory(entityManager);
+        PlayerService playerService = serviceFactory.createPlayerController(PlayerServiceImpl.class);
 
         try {
-            Player player = playerController.createPlayer("Johny", "Speedy", "1989");
+            Player player = playerService.createPlayer("Johny", "Speedy", "1989");
 
             System.out.println(player);
+//
+//            Player loaded = playerService.loadPlayer("100");
 
-            Player loaded = playerController.loadPlayer("1");
-
-            System.out.println(loaded);
+//            System.out.println(loaded);
 
         } catch (PersistenceFailure creationFailure) {
             creationFailure.printStackTrace();
@@ -46,7 +46,7 @@ public class RootImpl implements Root {
         return factory.createEntityManager();
     }
 
-    private ControllerFactory createControllerFactory(EntityManager entityManager) {
-        return ControllerFactoryImpl.create(entityManager);
+    private ServiceFactory createControllerFactory(EntityManager entityManager) {
+        return ServiceFactoryImpl.create(entityManager);
     }
 }

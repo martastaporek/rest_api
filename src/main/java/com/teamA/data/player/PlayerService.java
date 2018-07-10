@@ -2,7 +2,7 @@ package com.teamA.data.player;
 
 import com.teamA.customExceptions.PersistenceFailure;
 
-public interface PlayerController {
+public interface PlayerService {
 
     Player createPlayer(String firstName, String lastName, String birthYear) throws PersistenceFailure;
     boolean savePlayer(Player player);

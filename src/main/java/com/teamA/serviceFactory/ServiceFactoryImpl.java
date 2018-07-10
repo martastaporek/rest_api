@@ -1,35 +1,35 @@
-package com.teamA.controllersFactory;
+package com.teamA.serviceFactory;
 
-import com.teamA.data.player.PlayerController;
-import com.teamA.data.player.PlayerControllerImpl;
+import com.teamA.data.player.PlayerService;
+import com.teamA.data.player.PlayerServiceImpl;
 
 import javax.persistence.EntityManager;
 
-public class ControllerFactoryImpl implements ControllerFactory {
+public class ServiceFactoryImpl implements ServiceFactory {
 
     private final EntityManager entityManager;
 
-    public static ControllerFactory create(EntityManager entityManager) {
-        return new ControllerFactoryImpl(entityManager);
+    public static ServiceFactory create(EntityManager entityManager) {
+        return new ServiceFactoryImpl(entityManager);
     }
 
-    private ControllerFactoryImpl(EntityManager entityManager) {
+    private ServiceFactoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Override
-    public <T extends PlayerController> PlayerController createPlayerController(Class<T> type) {
+    public <T extends PlayerService> PlayerService createPlayerController(Class<T> type) {
 
         String typeString = type.getSimpleName();
-        PlayerController controller;
+        PlayerService controller;
         switch (typeString) {
             case("PlayerControllerImpl"):
-                controller = new PlayerControllerImpl(entityManager);
+                controller = new PlayerServiceImpl(entityManager);
                 break;
             default:
-                controller = new PlayerControllerImpl(entityManager);
+                controller = new PlayerServiceImpl(entityManager);
                 break;
         }
-        return type.cast(controller);
+        return controller;
     }
 }

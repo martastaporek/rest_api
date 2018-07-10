@@ -1,8 +1,8 @@
-package com.teamA.controllersFactory;
+package com.teamA.serviceFactory;
 
-import com.teamA.data.player.PlayerController;
+import com.teamA.data.player.PlayerService;
 
-public interface ControllerFactory {
+public interface ServiceFactory {
 
-    <T extends PlayerController> PlayerController createPlayerController(Class<T> type);
+    <T extends PlayerService> PlayerService createPlayerController(Class<T> type);
 }

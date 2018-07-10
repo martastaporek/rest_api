@@ -8,7 +8,7 @@ import java.io.Serializable;
 public abstract class AbstractEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     public AbstractEntity(long id) {

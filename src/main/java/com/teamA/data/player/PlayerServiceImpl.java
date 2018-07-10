@@ -5,11 +5,11 @@ import com.teamA.customExceptions.PersistenceFailure;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-public class PlayerControllerImpl implements PlayerController {
+public class PlayerServiceImpl implements PlayerService {
 
     private final EntityManager entityManager;
 
-    public PlayerControllerImpl(EntityManager entityManager) {
+    public PlayerServiceImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -19,9 +19,9 @@ public class PlayerControllerImpl implements PlayerController {
 
         try {
             int birthYearAsInt = Integer.parseInt(birthYear);
-//            long currentMaxId = getMaxId();
-//            long currentMaxId = 100;
+            long currentMaxId = getMaxId();
             Player player = new Player(firstName, lastName, birthYearAsInt);
+            player.setId(currentMaxId+1);
             if (! save(player)) {
                 throw new PersistenceFailure();
             }

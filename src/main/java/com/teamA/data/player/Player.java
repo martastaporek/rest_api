@@ -5,7 +5,7 @@ import com.teamA.data.AbstractEntity;
 import javax.persistence.*;
 import javax.persistence.Entity;
 
-@Entity
+@Entity(name = "player")
 public class Player extends AbstractEntity {
 
     private String firstName;
@@ -13,19 +13,15 @@ public class Player extends AbstractEntity {
     private int birthYear;
 
     Player(String firstName, String lastName, int birthYear) {
+        super();
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthYear = birthYear;
     }
 
-    Player(long id, String firstName, String lastName, int birthYear) {
-        super(id);
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthYear = birthYear;
+    protected Player() {
+        super();
     }
-
-    protected Player() {}
 
     public String getFirstName() {
         return firstName;
