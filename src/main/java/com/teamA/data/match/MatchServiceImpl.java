@@ -1,11 +1,11 @@
 package com.teamA.data.match;
 
 import com.teamA.customExceptions.PersistenceFailure;
-import com.teamA.data.player.Player;
 import com.teamA.data.team.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.time.LocalDate;
 import java.util.List;
 
 public class MatchServiceImpl implements MatchService {
@@ -34,28 +34,97 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public boolean registerGoal(Match match, Team shooters) throws PersistenceFailure {
+    public boolean registerGoal(Match match, Team shooters) {
+
+        int score;
+        Team team = match.getFirstTeam();
+        if (shooters.getId() == team.getId()) {
+            score = match.getFirstTeamScore();
+            match.setFirstTeamScore(++score);
+        } else {
+            score = match.getSecondTeamScore();
+            match.setSecondTeamScore(++score);
+        }
+        return save(match);
+    }
+
+    @Override
+    public boolean registerGoal(String matchId, String teamId) {
+
+        try {
+            Match match = loadMatch(matchId);
+            Team team = null;  // todo need dependency to TeamService
+
+        } catch (PersistenceFailure persistenceFailure) {
+            persistenceFailure.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean registerScore(Match match, String firstTeamScore, String secondTeamScore) {
+
+        try {
+            int firstTeamScoreAsInt = Integer.parseInt(firstTeamScore);
+            int secondTeamScoreAsInt = Integer.parseInt(secondTeamScore);
+
+            match.setFirstTeamScore(firstTeamScoreAsInt);
+            match.setFirstTeamScore(secondTeamScoreAsInt);
+
+        } catch (NumberFormatException notUsed) {
+            return false;
+        }
+        return save(match);
+    }
+
+    @Override
+    public boolean registerScore(String matchId, String firstTeamScore, String secondTeamScore) {
+
+        try {
+            Match match = loadMatch(matchId);
+            return registerScore(match, firstTeamScore, secondTeamScore);
+
+        } catch (PersistenceFailure persistenceFailure) {
+            persistenceFailure.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean registerDate(String matchId, LocalDate date) {
+
         return false;
     }
 
     @Override
-    public boolean registerScore(String firstTeamScore, String secondTeamScore) throws PersistenceFailure {
+    public boolean registerDate(Match match, LocalDate date) {
         return false;
     }
 
     @Override
-    public boolean changeLocation(Match match, String location) throws PersistenceFailure {
+    public boolean changeLocation(Match match, String location) {
         return false;
     }
 
     @Override
-    public boolean saveMatch(Match match) {
+    public boolean changeLocation(String matchId, String location) {
         return false;
     }
 
     @Override
-    public Match loadMatch(String id) throws PersistenceFailure {
-        return null;
+    public Match loadMatch(String matchId) throws PersistenceFailure {
+        try {
+            long matchIdAsLong = Long.parseLong(matchId);
+            Match match = entityManager.find(Match.class, matchIdAsLong);
+            if (match == null) {
+                throw new PersistenceFailure();
+            }
+            return match;
+        } catch (NumberFormatException | PersistenceFailure notUsed) {
+            String failureInfo = String.format("the match with id %s could not be created", matchId);
+            throw new PersistenceFailure(failureInfo);
+        }
     }
 
     @Override

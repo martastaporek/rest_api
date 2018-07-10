@@ -24,7 +24,7 @@ public class RootImpl implements Root {
 
         EntityManager entityManager = createEntityManager();
         ServiceFactory serviceFactory = createServiceFactory(entityManager);
-        PlayerService playerService = serviceFactory.createPlayerController(PlayerServiceImpl.class);
+        PlayerService playerService = serviceFactory.createPlayerService(PlayerServiceImpl.class);
 
         try {
 //            Player player = playerService.createPlayer("Damian", "Xxxx", "1991");
