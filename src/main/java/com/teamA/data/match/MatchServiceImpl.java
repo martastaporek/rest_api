@@ -34,7 +34,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public boolean registerGoal(Team shooters) throws PersistenceFailure {
+    public boolean registerGoal(Match match, Team shooters) throws PersistenceFailure {
         return false;
     }
 
