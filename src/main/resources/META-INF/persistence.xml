@@ -7,6 +7,7 @@
     <persistence-unit name="mundialPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.teamA.data.player.Player</class>
+        <class>com.teamA.data.team.Team</class>
         <class>com.teamA.data.AbstractEntity</class>
         <class>com.teamA.data.team.Team</class>
         <class>com.teamA.data.match.Match</class>
@@ -19,7 +20,7 @@
             <property name="javax.persistence.schema-generation.scripts.drop-target" value="src/main/resources/META-INF/drop-schema.ddl"/>
 
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/mundialDb"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/mundialdb"/>
             <property name="javax.persistence.jdbc.user" value="team_a"/>
             <property name="javax.persistence.jdbc.password" value="1234"/>
             <!--<property name="javax.persistence.sql-load-script-source" value="insert.sql"/>-->

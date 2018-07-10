@@ -53,10 +53,6 @@ public class Player extends AbstractEntity {
 
 
 
-    public Team getTeam() {
-        return team;
-    }
-
     public void setTeam(Team team) {
         this.team = team;
     }
@@ -70,4 +66,5 @@ public class Player extends AbstractEntity {
                 ", team=" + team +
                 "} " + super.toString();
     }
+
 }
