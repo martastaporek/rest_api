@@ -2,8 +2,10 @@ package com.teamA.data.team;
 
 import com.teamA.data.AbstractEntity;
 import com.teamA.data.player.Player;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +16,15 @@ public class Team extends AbstractEntity {
 
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private List<Player> players = new ArrayList<>();
 
-    public Team(String name) {
+    Team(String name) {
         super();
         this.name = name;
     }
 
-    public Team() {
+    protected Team() {
         super();
     }
 
