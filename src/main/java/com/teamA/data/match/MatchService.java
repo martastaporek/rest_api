@@ -4,6 +4,7 @@ import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.team.Team;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface MatchService {
@@ -13,8 +14,8 @@ public interface MatchService {
     boolean registerGoal(String matchId, String teamId);
     boolean registerScore(Match match, String firstTeamScore, String secondTeamScore);
     boolean registerScore(String matchId, String firstTeamScore, String secondTeamScore);
-    boolean registerDate(String matchId, LocalDate date);
-    boolean registerDate(Match match, LocalDate date);
+    boolean registerDate(String matchId, Date date);
+    boolean registerDate(Match match, Date date);
     boolean changeLocation(Match match, String location);
     boolean changeLocation(String matchId, String location);
     Match loadMatch(String matchId) throws PersistenceFailure;

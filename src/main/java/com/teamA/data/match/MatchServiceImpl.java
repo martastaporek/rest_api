@@ -5,7 +5,7 @@ import com.teamA.data.team.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class MatchServiceImpl implements MatchService {
@@ -70,7 +70,7 @@ public class MatchServiceImpl implements MatchService {
             int secondTeamScoreAsInt = Integer.parseInt(secondTeamScore);
 
             match.setFirstTeamScore(firstTeamScoreAsInt);
-            match.setFirstTeamScore(secondTeamScoreAsInt);
+            match.setSecondTeamScore(secondTeamScoreAsInt);
 
         } catch (NumberFormatException notUsed) {
             return false;
@@ -92,19 +92,21 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public boolean registerDate(String matchId, LocalDate date) {
+    public boolean registerDate(String matchId, Date date) {
 
         return false;
     }
 
     @Override
-    public boolean registerDate(Match match, LocalDate date) {
+    public boolean registerDate(Match match, Date date) {
         return false;
     }
 
     @Override
     public boolean changeLocation(Match match, String location) {
-        return false;
+
+        match.setLocation(location);
+        return save(match);
     }
 
     @Override

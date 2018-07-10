@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity(name = "match")
 public class Match extends AbstractEntity {
@@ -22,7 +22,7 @@ public class Match extends AbstractEntity {
     private int secondTeamScore;
 
     @Temporal(TemporalType.DATE)
-    private LocalDate date;
+    private Date date;
 
     private String location;
 
@@ -34,7 +34,7 @@ public class Match extends AbstractEntity {
     }
 
     Match(Team firstTeam, Team secondTeam, int firstTeamScore,
-          int secondTeamScore, LocalDate date, String location) {
+          int secondTeamScore, Date date, String location) {
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
         this.firstTeamScore = firstTeamScore;
@@ -79,11 +79,11 @@ public class Match extends AbstractEntity {
         this.secondTeamScore = secondTeamScore;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
