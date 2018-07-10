@@ -8,6 +8,6 @@ import java.util.List;
 public interface TeamService {
 
     Team createTeam(String name) throws PersistenceFailure;
-    boolean setPlayers(List <Player> players);
+    boolean registerPlayer(String teamId, String playerId);
     Team loadTeam (String id) throws PersistenceFailure;
 }

@@ -2,6 +2,7 @@ package com.teamA.data.team;
 
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.player.Player;
+import com.teamA.data.player.PlayerService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -10,10 +11,13 @@ import java.util.List;
 public class TeamServiceImpl implements TeamService {
 
     private final EntityManager entityManager;
+    private final PlayerService playerService;
 
-    public TeamServiceImpl(EntityManager entityManager) {
+    public TeamServiceImpl(EntityManager entityManager, PlayerService playerService) {
         this.entityManager = entityManager;
+        this.playerService = playerService;
     }
+
     @Override
     public Team createTeam(String name) throws PersistenceFailure {
         try {
@@ -30,8 +34,19 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public boolean setPlayers(List<Player> players) {
-        return false;
+    public boolean registerPlayer(String teamId, String playerId) {
+        try{
+            Team team = loadTeam(teamId);
+            Player player = playerService.loadPlayer(playerId);
+            team.getPlayers().add(player);
+            player.setTeam(team);
+            playerService.savePlayer(player);
+            save(team);
+            return true;
+        }catch (PersistenceFailure notUsed) {
+            return false;
+        }
+
     }
 
     @Override
@@ -65,7 +80,7 @@ public class TeamServiceImpl implements TeamService {
 
     private long getMaxId() {
         try {
-            return entityManager.createQuery("select max(p.id) from team p", Long.class).getSingleResult();
+            return entityManager.createQuery("select max(t.id) from team t", Long.class).getSingleResult();
         } catch (NullPointerException notUsed) {
             return 1;
         }
