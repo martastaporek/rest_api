@@ -44,6 +44,7 @@ public class TeamServiceImpl implements TeamService {
             save(team);
             return true;
         }catch (PersistenceFailure notUsed) {
+            notUsed.printStackTrace();
             return false;
         }
 

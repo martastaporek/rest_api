@@ -4,6 +4,8 @@ import com.teamA.data.match.Match;
 import com.teamA.data.match.MatchService;
 import com.teamA.data.match.MatchServiceImpl;
 import com.teamA.data.team.Team;
+import com.teamA.data.team.TeamService;
+import com.teamA.data.team.TeamServiceImpl;
 import com.teamA.serviceFactory.ServiceFactory;
 import com.teamA.serviceFactory.ServiceFactoryImpl;
 import com.teamA.customExceptions.PersistenceFailure;
@@ -30,14 +32,20 @@ public class RootImpl implements Root {
         EntityManager entityManager = createEntityManager();
         ServiceFactory serviceFactory = createServiceFactory(entityManager);
         PlayerService playerService = serviceFactory.createPlayerService(PlayerServiceImpl.class);
+        TeamService teamService = serviceFactory.createTeamService(TeamServiceImpl.class);
 
 
         try {
-//            Player player = playerService.createPlayer("Damian", "Xxxx", "1991");
-//
-//            System.out.println(player);
-//
-            Player loaded = playerService.loadPlayer("104");
+            Player player = playerService.createPlayer("Pablo", "Horny", "1995");
+//            Team team = teamService.createTeam("Poland");
+//            Team teamEng = teamService.createTeam("England");
+
+//            System.out.println(team);
+//            System.out.println(teamEng);
+
+            System.out.println(player);
+
+            Player loaded = playerService.loadPlayer("2");
 
             System.out.println(loaded);
 
@@ -62,7 +70,18 @@ public class RootImpl implements Root {
 
     private void makeFunWithTeam(ServiceFactory serviceFactory, EntityManager entityManager) {
 
+        TeamService teamService = serviceFactory.createTeamService(TeamServiceImpl.class);
+        PlayerService playerService = serviceFactory.createPlayerService(PlayerServiceImpl.class);
 
+
+        try {
+            Player player = playerService.loadPlayer("1");
+            Team team = teamService.createTeam("Poland");
+//            teamService.registerPlayer()
+
+        } catch (PersistenceFailure persistenceFailure) {
+            persistenceFailure.printStackTrace();
+        }
 
 
     }
