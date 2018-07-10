@@ -1,0 +1,9 @@
+alter table Player drop constraint FKt5lbj1n3rk8mjjvaqbo031ons
+drop table if exists AbstractEntity cascade
+drop table if exists Player cascade
+alter table Player drop constraint FKt5lbj1n3rk8mjjvaqbo031ons
+drop table if exists AbstractEntity cascade
+drop table if exists Player cascade
+alter table Player drop constraint FKt5lbj1n3rk8mjjvaqbo031ons
+drop table if exists AbstractEntity cascade
+drop table if exists Player cascade

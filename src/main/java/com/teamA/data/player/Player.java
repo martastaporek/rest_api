@@ -1,11 +1,27 @@
-package com.teamA.data;
+package com.teamA.data.player;
 
-public class Player extends Entity {
+import com.teamA.data.AbstractEntity;
+
+import javax.persistence.*;
+import javax.persistence.Entity;
+
+@Entity(name = "player")
+public class Player extends AbstractEntity {
 
     private String firstName;
     private String lastName;
-    int birthYear;
+    private int birthYear;
 
+    Player(String firstName, String lastName, int birthYear) {
+        super();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthYear = birthYear;
+    }
+
+    protected Player() {
+        super();
+    }
 
     public String getFirstName() {
         return firstName;

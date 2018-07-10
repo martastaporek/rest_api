@@ -1,6 +1,8 @@
-package com.teamA.data;
+package com.teamA.data.mundial;
 
-public class Mundial extends Entity {
+import com.teamA.data.AbstractEntity;
+
+public class Mundial extends AbstractEntity {
 
     private String name;
     private String location;
