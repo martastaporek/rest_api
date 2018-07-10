@@ -1,5 +1,6 @@
 package com.teamA.servletSupplier;
 
+import com.google.gson.Gson;
 import com.teamA.data.match.MatchService;
 import com.teamA.data.player.PlayerService;
 import com.teamA.data.team.TeamService;
@@ -8,6 +9,8 @@ import com.teamA.logger.LogPath;
 import com.teamA.logger.LogWriterImpl;
 import com.teamA.logger.Logger;
 import com.teamA.logger.LoggerImpl;
+import com.teamA.parsers.JsonParser;
+import com.teamA.parsers.JsonParserImpl;
 import com.teamA.serviceFactory.ServiceFactory;
 import com.teamA.serviceFactory.ServiceFactoryImpl;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
@@ -34,13 +37,7 @@ public class Supplier {
     private static PlayerService playerService;
     private static TeamService teamService;
     private static MatchService matchService;
-
-    public static EntityManager deliverEntityManager() {
-        if (entityManager == null) {
-            entityManager = entityManagerFactory.createEntityManager();
-        }
-        return entityManager;
-    }
+    private static JsonParser jsonParser;
 
     public static Logger deliverLogger() {
         if (logger == null) {
@@ -69,5 +66,19 @@ public class Supplier {
             matchService = serviceFactory.createMatchService(type);
         }
         return matchService;
+    }
+
+    public static EntityManager deliverEntityManager() {
+        if (entityManager == null) {
+            entityManager = entityManagerFactory.createEntityManager();
+        }
+        return entityManager;
+    }
+
+    public static JsonParser deliverJsonParser() {
+        if (jsonParser == null) {
+            jsonParser = new JsonParserImpl(new Gson());
+        }
+        return jsonParser;
     }
 }

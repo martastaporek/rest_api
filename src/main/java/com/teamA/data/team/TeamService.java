@@ -1,9 +1,6 @@
 package com.teamA.data.team;
 
 import com.teamA.customExceptions.PersistenceFailure;
-import com.teamA.data.player.Player;
-
-import java.util.List;
 
 public interface TeamService {
 

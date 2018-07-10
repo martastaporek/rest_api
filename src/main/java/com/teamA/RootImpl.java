@@ -33,6 +33,7 @@ public class RootImpl implements Root {
     private void makeFunWithPlayer() {
 
         PlayerService playerService = Supplier.deliverPlayerService(PlayerServiceImpl.class);
+        TeamService teamService = Supplier.deliverTeamService(TeamServiceImpl.class);
         Player loaded;
         try {
 
@@ -46,6 +47,11 @@ public class RootImpl implements Root {
             System.out.println(playerService.getFullName("2"));
             System.out.println(loaded);
 
+            System.out.println("My team before: " + loaded.getTeam());
+
+            teamService.registerPlayer("4", "2");
+
+            System.out.println("My team after: " + loaded.getTeam());
 
 
         } catch (PersistenceFailure persistenceFailure) {
