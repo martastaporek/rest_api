@@ -6,6 +6,7 @@ import com.teamA.data.player.PlayerService;
 import com.teamA.data.player.PlayerServiceImpl;
 import com.teamA.data.team.TeamService;
 import com.teamA.data.team.TeamServiceImpl;
+import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
 
@@ -13,13 +14,15 @@ public class ServiceFactoryImpl implements ServiceFactory {
 
 
     private final EntityManager entityManager;
+    private final ServiceTransactionHelper serviceTransactionHelper;
 
-    public static ServiceFactory create(EntityManager entityManager) {
-        return new ServiceFactoryImpl(entityManager);
+    public static ServiceFactory create(EntityManager entityManager, ServiceTransactionHelper serviceTransactionHelper) {
+        return new ServiceFactoryImpl(entityManager, serviceTransactionHelper);
     }
 
-    private ServiceFactoryImpl(EntityManager entityManager) {
+    private ServiceFactoryImpl(EntityManager entityManager, ServiceTransactionHelper serviceTransactionHelper) {
         this.entityManager = entityManager;
+        this.serviceTransactionHelper = serviceTransactionHelper;
     }
 
     @Override
@@ -29,10 +32,10 @@ public class ServiceFactoryImpl implements ServiceFactory {
         PlayerService service;
         switch (typeString) {
             case("PlayerControllerImpl"):
-                service = new PlayerServiceImpl(entityManager);
+                service = new PlayerServiceImpl(entityManager, serviceTransactionHelper);
                 break;
             default:
-                service = new PlayerServiceImpl(entityManager);
+                service = new PlayerServiceImpl(entityManager, serviceTransactionHelper);
                 break;
         }
         return service;
@@ -41,14 +44,15 @@ public class ServiceFactoryImpl implements ServiceFactory {
     @Override
     public <T extends MatchService> MatchService createMatchService(Class<T> type) {
 
+        TeamService teamService = createTeamService(TeamServiceImpl.class);
         String typeString = type.getSimpleName();
         MatchService service;
         switch (typeString) {
             case("MatchServiceImpl"):
-                service = new MatchServiceImpl(entityManager);
+                service = new MatchServiceImpl(entityManager, serviceTransactionHelper, teamService);
                 break;
             default:
-                service = new MatchServiceImpl(entityManager);
+                service = new MatchServiceImpl(entityManager, serviceTransactionHelper, teamService);
                 break;
         }
         return service;
@@ -61,10 +65,10 @@ public class ServiceFactoryImpl implements ServiceFactory {
         TeamService service;
         switch (typeString) {
             case("TeamServiceImpl"):
-                service = new TeamServiceImpl(entityManager, playerService);
+                service = new TeamServiceImpl(entityManager, serviceTransactionHelper, playerService);
                 break;
             default:
-                service = new TeamServiceImpl(entityManager, playerService);
+                service = new TeamServiceImpl(entityManager, serviceTransactionHelper, playerService);
                 break;
         }
         return service;

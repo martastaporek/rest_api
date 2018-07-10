@@ -17,7 +17,6 @@ public interface MatchService {
     boolean registerDate(Match match, Date date);
     boolean changeLocation(Match match, String location);
     boolean changeLocation(String matchId, String location);
-    boolean saveMatch(Match match);
     Match loadMatch(String matchId) throws PersistenceFailure;
     List<Match> loadAll() throws PersistenceFailure;
 

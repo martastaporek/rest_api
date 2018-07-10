@@ -2,29 +2,34 @@ package com.teamA.data.match;
 
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.team.Team;
+import com.teamA.data.team.TeamService;
+import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.util.Date;
 import java.util.List;
 
 public class MatchServiceImpl implements MatchService {
 
     private final EntityManager entityManager;
-//    private final TeamService!!!
+    private final ServiceTransactionHelper serviceTransactionHelper;
+    private final TeamService teamService;
 
-    public MatchServiceImpl(EntityManager entityManager) {
+    public MatchServiceImpl(EntityManager entityManager, ServiceTransactionHelper serviceTransactionHelper,
+                            TeamService teamService) {
         this.entityManager = entityManager;
+        this.serviceTransactionHelper = serviceTransactionHelper;
+        this.teamService = teamService;
     }
 
     @Override
     public Match createMatch(Team firstTeam, Team secondTeam, String location) throws PersistenceFailure {
 
         try {
-            long currentMaxId = getMaxId();
+            long currentMaxId = serviceTransactionHelper.getMaxFreeId();
             Match match = new Match(firstTeam, secondTeam, location);
             match.setId(currentMaxId+1);
-            if (! save(match)) {
+            if (! serviceTransactionHelper.saveEntity(match)) {
                 throw new PersistenceFailure();
             }
             return match;
@@ -46,7 +51,7 @@ public class MatchServiceImpl implements MatchService {
             score = match.getSecondTeamScore();
             match.setSecondTeamScore(++score);
         }
-        return save(match);
+        return serviceTransactionHelper.saveEntity(match);
     }
 
     @Override
@@ -76,7 +81,7 @@ public class MatchServiceImpl implements MatchService {
         } catch (NumberFormatException notUsed) {
             return false;
         }
-        return save(match);
+        return serviceTransactionHelper.saveEntity(match);
     }
 
     @Override
@@ -105,19 +110,13 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public boolean changeLocation(Match match, String location) {
-
         match.setLocation(location);
-        return save(match);
+        return serviceTransactionHelper.saveEntity(match);
     }
 
     @Override
     public boolean changeLocation(String matchId, String location) {
         return false;
-    }
-
-    @Override
-    public boolean saveMatch(Match match) {
-        return save(match);
     }
 
     @Override
@@ -138,35 +137,5 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public List<Match> loadAll() throws PersistenceFailure {
         return null;
-    }
-
-    private boolean save(Match match) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.persist(match);
-            transaction.commit();
-        } catch (Exception notUsed) {
-            rollBackTransaction(transaction);
-            return false;
-        }
-        return true;
-    }
-
-    private long getMaxId() {
-        try {
-            return entityManager.createQuery("select max(e.id) from AbstractEntity e", Long.class).getSingleResult();
-        } catch (NullPointerException notUsed) {
-            return 1;
-        }
-    }
-
-    private void rollBackTransaction(EntityTransaction transaction) {
-        if (transaction != null) {
-            try {
-                transaction.rollback();
-            } catch (Exception notUsed) {}
-        }
     }
 }
