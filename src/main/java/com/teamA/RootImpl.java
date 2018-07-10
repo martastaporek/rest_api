@@ -1,5 +1,8 @@
 package com.teamA;
 
+import com.teamA.data.match.Match;
+import com.teamA.data.match.MatchService;
+import com.teamA.data.match.MatchServiceImpl;
 import com.teamA.data.team.Team;
 import com.teamA.serviceFactory.ServiceFactory;
 import com.teamA.serviceFactory.ServiceFactoryImpl;
@@ -25,8 +28,9 @@ public class RootImpl implements Root {
     public void run() {
 
         EntityManager entityManager = createEntityManager();
-        ServiceFactory serviceFactory = createControllerFactory(entityManager);
-        PlayerService playerService = serviceFactory.createPlayerController(PlayerServiceImpl.class);
+        ServiceFactory serviceFactory = createServiceFactory(entityManager);
+        PlayerService playerService = serviceFactory.createPlayerService(PlayerServiceImpl.class);
+
 
         try {
 //            Player player = playerService.createPlayer("Damian", "Xxxx", "1991");
@@ -37,14 +41,9 @@ public class RootImpl implements Root {
 
             System.out.println(loaded);
 
+            makeFunWithMatch(serviceFactory, entityManager);
 
-            Team team = new Team("Poland");
-            team.setId(1001);
-            EntityTransaction entityTransaction = entityManager.getTransaction();
-            entityTransaction.begin();
-            entityManager.persist(team);
-            entityTransaction.commit();
-            System.out.println(team);
+
 
         } catch (PersistenceFailure creationFailure) {
             creationFailure.printStackTrace();
@@ -57,7 +56,42 @@ public class RootImpl implements Root {
         return factory.createEntityManager();
     }
 
-    private ServiceFactory createControllerFactory(EntityManager entityManager) {
+    private ServiceFactory createServiceFactory(EntityManager entityManager) {
         return ServiceFactoryImpl.create(entityManager);
+    }
+
+
+    private void makeFunWithMatch(ServiceFactory serviceFactory, EntityManager entityManager) {
+
+        MatchService matchService = serviceFactory.createMatchService(MatchServiceImpl.class);
+
+//        EntityTransaction transaction = entityManager.getTransaction();
+//        transaction.begin();
+//
+//        Team firstTeam = new Team("Jajka");
+//        Team secondTeam = new Team("Lolki");
+//        firstTeam.setId(10000);
+//        secondTeam.setId(100001);
+//
+//        entityManager.persist(firstTeam);
+//        entityManager.persist(secondTeam);
+//
+//        transaction.commit();
+
+//        Match match = matchService.createMatch(firstTeam, secondTeam,"Cracow");
+
+        Match match;
+        try {
+            match = matchService.loadMatch("2");
+            System.out.println("Created match: " + match);
+
+            matchService.changeLocation(match, "Poznan");
+            matchService.registerScore(match, "5", "1");
+
+            System.out.println(match);
+        } catch (PersistenceFailure persistenceFailure) {
+            persistenceFailure.printStackTrace();
+        }
+
     }
 }

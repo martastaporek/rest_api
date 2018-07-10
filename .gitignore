@@ -112,6 +112,10 @@ fabric.properties
 # .idea/misc.xml
 # *.ipr
 
+
+### Hibernate ###
+*.ddl
+
 # Sonarlint plugin
 .idea/sonarlint
 

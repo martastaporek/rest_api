@@ -51,15 +51,11 @@ public class Player extends AbstractEntity {
         this.birthYear = birthYear;
     }
 
-    public Team getTeam() {
-        return team;
-    }
+
 
     public void setTeam(Team team) {
         this.team = team;
     }
-
-
 
     @Override
     public String toString() {
@@ -67,8 +63,8 @@ public class Player extends AbstractEntity {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthYear=" + birthYear +
+                ", team=" + team +
                 "} " + super.toString();
     }
-
 
 }
