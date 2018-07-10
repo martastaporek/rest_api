@@ -3,7 +3,6 @@ package com.teamA.data.match;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.team.Team;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 

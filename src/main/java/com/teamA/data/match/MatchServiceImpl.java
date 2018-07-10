@@ -2,32 +2,43 @@ package com.teamA.data.match;
 
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.team.Team;
+import com.teamA.data.team.TeamService;
+import com.teamA.logger.Logger;
+import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.util.Date;
 import java.util.List;
 
 public class MatchServiceImpl implements MatchService {
 
     private final EntityManager entityManager;
+    private final ServiceTransactionHelper serviceTransactionHelper;
+    private final Logger logger;
+    private final TeamService teamService;
 
-    public MatchServiceImpl(EntityManager entityManager) {
+    public MatchServiceImpl(EntityManager entityManager, ServiceTransactionHelper serviceTransactionHelper,
+                            Logger logger,
+                            TeamService teamService) {
         this.entityManager = entityManager;
+        this.serviceTransactionHelper = serviceTransactionHelper;
+        this.logger = logger;
+        this.teamService = teamService;
     }
 
     @Override
     public Match createMatch(Team firstTeam, Team secondTeam, String location) throws PersistenceFailure {
 
         try {
-            long currentMaxId = getMaxId();
+            long currentMaxId = serviceTransactionHelper.getMaxFreeId();
             Match match = new Match(firstTeam, secondTeam, location);
             match.setId(currentMaxId+1);
-            if (! save(match)) {
+            if (! serviceTransactionHelper.saveEntity(match)) {
                 throw new PersistenceFailure();
             }
             return match;
-        } catch (PersistenceFailure notUsed) {
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
             String failureInfo = String.format("the match %s %s could not be created", firstTeam, secondTeam);
             throw new PersistenceFailure(failureInfo);
         }
@@ -45,7 +56,7 @@ public class MatchServiceImpl implements MatchService {
             score = match.getSecondTeamScore();
             match.setSecondTeamScore(++score);
         }
-        return save(match);
+        return serviceTransactionHelper.saveEntity(match);
     }
 
     @Override
@@ -56,7 +67,7 @@ public class MatchServiceImpl implements MatchService {
             Team team = null;  // todo need dependency to TeamService
 
         } catch (PersistenceFailure persistenceFailure) {
-            persistenceFailure.printStackTrace();
+            logger.log(persistenceFailure);
             return false;
         }
         return true;
@@ -72,10 +83,11 @@ public class MatchServiceImpl implements MatchService {
             match.setFirstTeamScore(firstTeamScoreAsInt);
             match.setSecondTeamScore(secondTeamScoreAsInt);
 
-        } catch (NumberFormatException notUsed) {
+        } catch (NumberFormatException ex) {
+            logger.log(ex.getMessage());
             return false;
         }
-        return save(match);
+        return serviceTransactionHelper.saveEntity(match);
     }
 
     @Override
@@ -86,7 +98,7 @@ public class MatchServiceImpl implements MatchService {
             return registerScore(match, firstTeamScore, secondTeamScore);
 
         } catch (PersistenceFailure persistenceFailure) {
-            persistenceFailure.printStackTrace();
+            logger.log(persistenceFailure);
             return false;
         }
     }
@@ -104,9 +116,8 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public boolean changeLocation(Match match, String location) {
-
         match.setLocation(location);
-        return save(match);
+        return serviceTransactionHelper.saveEntity(match);
     }
 
     @Override
@@ -123,7 +134,8 @@ public class MatchServiceImpl implements MatchService {
                 throw new PersistenceFailure();
             }
             return match;
-        } catch (NumberFormatException | PersistenceFailure notUsed) {
+        } catch (NumberFormatException | PersistenceFailure ex) {
+            logger.log(ex);
             String failureInfo = String.format("the match with id %s could not be created", matchId);
             throw new PersistenceFailure(failureInfo);
         }
@@ -132,35 +144,5 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public List<Match> loadAll() throws PersistenceFailure {
         return null;
-    }
-
-    private boolean save(Match match) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.persist(match);
-            transaction.commit();
-        } catch (Exception notUsed) {
-            rollBackTransaction(transaction);
-            return false;
-        }
-        return true;
-    }
-
-    private long getMaxId() {
-        try {
-            return entityManager.createQuery("select max(m.id) from match m", Long.class).getSingleResult();
-        } catch (NullPointerException notUsed) {
-            return 1;
-        }
-    }
-
-    private void rollBackTransaction(EntityTransaction transaction) {
-        if (transaction != null) {
-            try {
-                transaction.rollback();
-            } catch (Exception notUsed) {}
-        }
     }
 }
