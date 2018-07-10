@@ -1,11 +1,31 @@
-package com.teamA.data;
+package com.teamA.data.player;
 
-public class Player extends Entity {
+import com.teamA.data.AbstractEntity;
+import com.teamA.data.team.Team;
+
+import javax.persistence.*;
+import javax.persistence.Entity;
+
+@Entity(name = "player")
+public class Player extends AbstractEntity {
 
     private String firstName;
     private String lastName;
-    int birthYear;
+    private int birthYear;
 
+    @ManyToOne
+    private Team team;
+
+    Player(String firstName, String lastName, int birthYear) {
+        super();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthYear = birthYear;
+    }
+
+    protected Player() {
+        super();
+    }
 
     public String getFirstName() {
         return firstName;
@@ -31,12 +51,20 @@ public class Player extends Entity {
         this.birthYear = birthYear;
     }
 
+
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
     @Override
     public String toString() {
         return "Player{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthYear=" + birthYear +
+                ", team=" + team +
                 "} " + super.toString();
     }
+
 }
