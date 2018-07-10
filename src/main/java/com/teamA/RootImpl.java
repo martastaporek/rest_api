@@ -1,6 +1,5 @@
 package com.teamA;
 
-import com.teamA.data.team.Team;
 import com.teamA.serviceFactory.ServiceFactory;
 import com.teamA.serviceFactory.ServiceFactoryImpl;
 import com.teamA.customExceptions.PersistenceFailure;
@@ -10,7 +9,6 @@ import com.teamA.data.player.PlayerServiceImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 public class RootImpl implements Root {
@@ -25,7 +23,7 @@ public class RootImpl implements Root {
     public void run() {
 
         EntityManager entityManager = createEntityManager();
-        ServiceFactory serviceFactory = createControllerFactory(entityManager);
+        ServiceFactory serviceFactory = createServiceFactory(entityManager);
         PlayerService playerService = serviceFactory.createPlayerController(PlayerServiceImpl.class);
 
         try {
@@ -36,15 +34,6 @@ public class RootImpl implements Root {
             Player loaded = playerService.loadPlayer("104");
 
             System.out.println(loaded);
-
-
-            Team team = new Team("Poland");
-            team.setId(1001);
-            EntityTransaction entityTransaction = entityManager.getTransaction();
-            entityTransaction.begin();
-            entityManager.persist(team);
-            entityTransaction.commit();
-            System.out.println(team);
 
         } catch (PersistenceFailure creationFailure) {
             creationFailure.printStackTrace();
@@ -57,7 +46,7 @@ public class RootImpl implements Root {
         return factory.createEntityManager();
     }
 
-    private ServiceFactory createControllerFactory(EntityManager entityManager) {
+    private ServiceFactory createServiceFactory(EntityManager entityManager) {
         return ServiceFactoryImpl.create(entityManager);
     }
 }
