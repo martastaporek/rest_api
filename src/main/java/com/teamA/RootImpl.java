@@ -1,5 +1,6 @@
 package com.teamA;
 
+import com.teamA.data.team.Team;
 import com.teamA.serviceFactory.ServiceFactory;
 import com.teamA.serviceFactory.ServiceFactoryImpl;
 import com.teamA.customExceptions.PersistenceFailure;
@@ -9,6 +10,7 @@ import com.teamA.data.player.PlayerServiceImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 public class RootImpl implements Root {
@@ -27,13 +29,22 @@ public class RootImpl implements Root {
         PlayerService playerService = serviceFactory.createPlayerController(PlayerServiceImpl.class);
 
         try {
-            Player player = playerService.createPlayer("Johny", "Speedy", "1989");
-
-            System.out.println(player);
+//            Player player = playerService.createPlayer("Damian", "Xxxx", "1991");
 //
-//            Player loaded = playerService.loadPlayer("100");
+//            System.out.println(player);
+//
+            Player loaded = playerService.loadPlayer("104");
 
-//            System.out.println(loaded);
+            System.out.println(loaded);
+
+
+            Team team = new Team("Poland");
+            team.setId(1001);
+            EntityTransaction entityTransaction = entityManager.getTransaction();
+            entityTransaction.begin();
+            entityManager.persist(team);
+            entityTransaction.commit();
+            System.out.println(team);
 
         } catch (PersistenceFailure creationFailure) {
             creationFailure.printStackTrace();

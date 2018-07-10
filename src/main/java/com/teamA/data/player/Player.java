@@ -1,6 +1,7 @@
 package com.teamA.data.player;
 
 import com.teamA.data.AbstractEntity;
+import com.teamA.data.team.Team;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -11,6 +12,8 @@ public class Player extends AbstractEntity {
     private String firstName;
     private String lastName;
     private int birthYear;
+    @ManyToOne
+    private Team team;
 
     Player(String firstName, String lastName, int birthYear) {
         super();
@@ -54,5 +57,13 @@ public class Player extends AbstractEntity {
                 ", lastName='" + lastName + '\'' +
                 ", birthYear=" + birthYear +
                 "} " + super.toString();
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
