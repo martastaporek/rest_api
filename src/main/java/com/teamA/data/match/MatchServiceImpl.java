@@ -3,6 +3,7 @@ package com.teamA.data.match;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.team.Team;
 import com.teamA.data.team.TeamService;
+import com.teamA.logger.Logger;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
@@ -13,12 +14,15 @@ public class MatchServiceImpl implements MatchService {
 
     private final EntityManager entityManager;
     private final ServiceTransactionHelper serviceTransactionHelper;
+    private final Logger logger;
     private final TeamService teamService;
 
     public MatchServiceImpl(EntityManager entityManager, ServiceTransactionHelper serviceTransactionHelper,
+                            Logger logger,
                             TeamService teamService) {
         this.entityManager = entityManager;
         this.serviceTransactionHelper = serviceTransactionHelper;
+        this.logger = logger;
         this.teamService = teamService;
     }
 
@@ -33,7 +37,8 @@ public class MatchServiceImpl implements MatchService {
                 throw new PersistenceFailure();
             }
             return match;
-        } catch (PersistenceFailure notUsed) {
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
             String failureInfo = String.format("the match %s %s could not be created", firstTeam, secondTeam);
             throw new PersistenceFailure(failureInfo);
         }
@@ -62,7 +67,7 @@ public class MatchServiceImpl implements MatchService {
             Team team = null;  // todo need dependency to TeamService
 
         } catch (PersistenceFailure persistenceFailure) {
-            persistenceFailure.printStackTrace();
+            logger.log(persistenceFailure);
             return false;
         }
         return true;
@@ -78,7 +83,8 @@ public class MatchServiceImpl implements MatchService {
             match.setFirstTeamScore(firstTeamScoreAsInt);
             match.setSecondTeamScore(secondTeamScoreAsInt);
 
-        } catch (NumberFormatException notUsed) {
+        } catch (NumberFormatException ex) {
+            logger.log(ex.getMessage());
             return false;
         }
         return serviceTransactionHelper.saveEntity(match);
@@ -92,7 +98,7 @@ public class MatchServiceImpl implements MatchService {
             return registerScore(match, firstTeamScore, secondTeamScore);
 
         } catch (PersistenceFailure persistenceFailure) {
-            persistenceFailure.printStackTrace();
+            logger.log(persistenceFailure);
             return false;
         }
     }
@@ -128,7 +134,8 @@ public class MatchServiceImpl implements MatchService {
                 throw new PersistenceFailure();
             }
             return match;
-        } catch (NumberFormatException | PersistenceFailure notUsed) {
+        } catch (NumberFormatException | PersistenceFailure ex) {
+            logger.log(ex);
             String failureInfo = String.format("the match with id %s could not be created", matchId);
             throw new PersistenceFailure(failureInfo);
         }

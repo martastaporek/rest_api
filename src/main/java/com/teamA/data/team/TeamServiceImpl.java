@@ -3,6 +3,7 @@ package com.teamA.data.team;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.player.Player;
 import com.teamA.data.player.PlayerService;
+import com.teamA.logger.Logger;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
@@ -11,13 +12,16 @@ public class TeamServiceImpl implements TeamService {
 
     private final EntityManager entityManager;
     private final ServiceTransactionHelper serviceTransactionHelper;
+    private final Logger logger;
     private final PlayerService playerService;
 
     public TeamServiceImpl(EntityManager entityManager,
                            ServiceTransactionHelper serviceTransactionHelper,
+                           Logger logger,
                            PlayerService playerService) {
         this.entityManager = entityManager;
         this.serviceTransactionHelper = serviceTransactionHelper;
+        this.logger = logger;
         this.playerService = playerService;
     }
 
@@ -31,7 +35,8 @@ public class TeamServiceImpl implements TeamService {
                 throw new PersistenceFailure();
             }
             return team;
-        } catch (PersistenceFailure notUsed) {
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
             String failureInfo = String.format("the team %s could not be created", name);
             throw new PersistenceFailure(failureInfo);
         }
@@ -46,8 +51,8 @@ public class TeamServiceImpl implements TeamService {
             player.setTeam(team);
             serviceTransactionHelper.saveEntity(player);
             return serviceTransactionHelper.saveEntity(team);
-        }catch (PersistenceFailure notUsed) {
-            notUsed.printStackTrace();
+        } catch (Exception ex) {
+            logger.log(ex);
             return false;
         }
     }
@@ -61,7 +66,8 @@ public class TeamServiceImpl implements TeamService {
                 throw new PersistenceFailure();
             }
             return team;
-        } catch (NumberFormatException | PersistenceFailure notUsed) {
+        } catch (NumberFormatException | PersistenceFailure ex) {
+            logger.log(ex);
             String failureInfo = String.format("the team with id %s does not exist", id);
             throw new PersistenceFailure(failureInfo);
         }

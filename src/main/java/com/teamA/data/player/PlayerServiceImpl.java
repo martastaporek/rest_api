@@ -1,6 +1,7 @@
 package com.teamA.data.player;
 
 import com.teamA.customExceptions.PersistenceFailure;
+import com.teamA.logger.Logger;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
@@ -9,12 +10,14 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final EntityManager entityManager;
     private final ServiceTransactionHelper serviceTransactionHelper;
+    private final Logger logger;
 
-    public PlayerServiceImpl(EntityManager entityManager, ServiceTransactionHelper serviceTransactionHelper) {
+    public PlayerServiceImpl(EntityManager entityManager, ServiceTransactionHelper serviceTransactionHelper,
+                             Logger logger) {
         this.entityManager = entityManager;
         this.serviceTransactionHelper = serviceTransactionHelper;
+        this.logger = logger;
     }
-
 
     @Override
     public Player createPlayer(String firstName, String lastName, String birthYear) throws PersistenceFailure {
@@ -28,7 +31,8 @@ public class PlayerServiceImpl implements PlayerService {
                 throw new PersistenceFailure();
             }
             return player;
-        } catch (NumberFormatException | PersistenceFailure notUsed) {
+        } catch (NumberFormatException | PersistenceFailure ex) {
+            logger.log(ex);
             String failureInfo = String.format("the player %s %s could not be created", firstName, lastName);
             throw new PersistenceFailure(failureInfo);
         }
@@ -43,7 +47,8 @@ public class PlayerServiceImpl implements PlayerService {
                 throw new PersistenceFailure();
             }
             return player;
-        } catch (NumberFormatException | PersistenceFailure notUsed) {
+        } catch (NumberFormatException | PersistenceFailure ex) {
+            logger.log(ex);
             String failureInfo = String.format("the player with id %s could not be created", id);
             throw new PersistenceFailure(failureInfo);
         }
