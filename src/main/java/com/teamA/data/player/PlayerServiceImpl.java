@@ -1,40 +1,41 @@
 package com.teamA.data.player;
 
 import com.teamA.customExceptions.PersistenceFailure;
+import com.teamA.logger.Logger;
+import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 
 public class PlayerServiceImpl implements PlayerService {
 
     private final EntityManager entityManager;
+    private final ServiceTransactionHelper serviceTransactionHelper;
+    private final Logger logger;
 
-    public PlayerServiceImpl(EntityManager entityManager) {
+    public PlayerServiceImpl(EntityManager entityManager, ServiceTransactionHelper serviceTransactionHelper,
+                             Logger logger) {
         this.entityManager = entityManager;
+        this.serviceTransactionHelper = serviceTransactionHelper;
+        this.logger = logger;
     }
-
 
     @Override
     public Player createPlayer(String firstName, String lastName, String birthYear) throws PersistenceFailure {
 
         try {
             int birthYearAsInt = Integer.parseInt(birthYear);
-            long currentMaxId = getMaxId();
+            long currentMaxId = serviceTransactionHelper.getMaxFreeId();
             Player player = new Player(firstName, lastName, birthYearAsInt);
             player.setId(currentMaxId+1);
-            if (! save(player)) {
+            if (! serviceTransactionHelper.saveEntity(player)) {
                 throw new PersistenceFailure();
             }
             return player;
-        } catch (NumberFormatException | PersistenceFailure notUsed) {
+        } catch (NumberFormatException | PersistenceFailure ex) {
+            logger.log(ex);
             String failureInfo = String.format("the player %s %s could not be created", firstName, lastName);
             throw new PersistenceFailure(failureInfo);
         }
-    }
-
-    @Override
-    public boolean savePlayer(Player player) {
-        return save(player);
     }
 
     @Override
@@ -46,30 +47,10 @@ public class PlayerServiceImpl implements PlayerService {
                 throw new PersistenceFailure();
             }
             return player;
-        } catch (NumberFormatException | PersistenceFailure notUsed) {
+        } catch (NumberFormatException | PersistenceFailure ex) {
+            logger.log(ex);
             String failureInfo = String.format("the player with id %s could not be created", id);
             throw new PersistenceFailure(failureInfo);
-        }
-    }
-
-    private boolean save(Player player) {
-        try {
-            EntityTransaction transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.persist(player);
-            transaction.commit();
-        } catch (Exception notUsed) {
-            notUsed.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    private long getMaxId() {
-        try {
-            return entityManager.createQuery("select max(e.id) from AbstractEntity e", Long.class).getSingleResult();
-        } catch (NullPointerException notUsed) {
-            return 1;
         }
     }
 }

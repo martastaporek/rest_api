@@ -63,7 +63,6 @@ public class Player extends AbstractEntity {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthYear=" + birthYear +
-                ", team=" + team +
                 "} " + super.toString();
     }
 
