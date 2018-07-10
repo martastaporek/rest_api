@@ -19,8 +19,9 @@ public class PlayerControllerImpl implements PlayerController {
 
         try {
             int birthYearAsInt = Integer.parseInt(birthYear);
-            long currentMaxId = getMaxId();
-            Player player = new Player(currentMaxId+1, firstName, lastName, birthYearAsInt);
+//            long currentMaxId = getMaxId();
+//            long currentMaxId = 100;
+            Player player = new Player(firstName, lastName, birthYearAsInt);
             if (! save(player)) {
                 throw new PersistenceFailure();
             }
@@ -45,7 +46,7 @@ public class PlayerControllerImpl implements PlayerController {
                 throw new PersistenceFailure();
             }
             return player;
-        } catch (NumberFormatException notUsed) {
+        } catch (NumberFormatException | PersistenceFailure notUsed) {
             String failureInfo = String.format("the player with id %s could not be created", id);
             throw new PersistenceFailure(failureInfo);
         }
@@ -66,7 +67,7 @@ public class PlayerControllerImpl implements PlayerController {
 
     private long getMaxId() {
         try {
-            return entityManager.createQuery("select max(p.id) from Player p", Long.class).getSingleResult();
+            return entityManager.createQuery("select max(p.id) from player p", Long.class).getSingleResult();
         } catch (NullPointerException notUsed) {
             return 1;
         }
