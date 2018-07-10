@@ -1,8 +1,10 @@
 package com.teamA.serviceFactory;
 
+import com.teamA.data.match.MatchService;
 import com.teamA.data.player.PlayerService;
 
 public interface ServiceFactory {
 
-    <T extends PlayerService> PlayerService createPlayerController(Class<T> type);
+    <T extends PlayerService> PlayerService createPlayerService(Class<T> type);
+    <T extends MatchService> MatchService createMatchService(Class<T> type);
 }
