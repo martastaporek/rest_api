@@ -3,6 +3,14 @@
 		"http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-
+	<servlet>
+		<servlet-name>PlayerServlet</servlet-name>
+		<servlet-class>servlets.PlayerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PlayerServlet</servlet-name>
+		<url-pattern>/players/*</url-pattern>
+	</servlet-mapping>
 
 </web-app>
+
