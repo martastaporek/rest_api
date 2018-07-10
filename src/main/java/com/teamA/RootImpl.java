@@ -38,6 +38,12 @@ public class RootImpl implements Root {
 
 
             loaded = playerService.loadPlayer("2");
+
+            System.out.println("his age: " + playerService.getAge("2"));
+            System.out.println(loaded);
+            playerService.changeFirstName("2", "Mario has new name");
+            playerService.changeLastName("2", "Youghurt it's new lastName");
+            System.out.println(playerService.getFullName("2"));
             System.out.println(loaded);
 
 
@@ -45,8 +51,6 @@ public class RootImpl implements Root {
         } catch (PersistenceFailure persistenceFailure) {
             persistenceFailure.printStackTrace();
         }
-
-
     }
 
 
