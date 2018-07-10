@@ -1,4 +1,6 @@
-package com.teamA.data;
+package com.teamA.data.mundial;
+
+import com.teamA.data.AbstractEntity;
 
 public class Mundial extends AbstractEntity {
 

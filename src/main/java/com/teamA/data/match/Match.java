@@ -1,4 +1,7 @@
-package com.teamA.data;
+package com.teamA.data.match;
+
+import com.teamA.data.AbstractEntity;
+import com.teamA.data.team.Team;
 
 import java.time.LocalDate;
 

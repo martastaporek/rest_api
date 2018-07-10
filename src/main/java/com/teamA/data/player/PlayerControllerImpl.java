@@ -1,4 +1,4 @@
-package com.teamA.data;
+package com.teamA.data.player;
 
 import com.teamA.customExceptions.PersistenceFailure;
 

@@ -3,9 +3,9 @@ package com.teamA;
 import com.teamA.controllersFactory.ControllerFactory;
 import com.teamA.controllersFactory.ControllerFactoryImpl;
 import com.teamA.customExceptions.PersistenceFailure;
-import com.teamA.data.Player;
-import com.teamA.data.PlayerController;
-import com.teamA.data.PlayerControllerImpl;
+import com.teamA.data.player.Player;
+import com.teamA.data.player.PlayerController;
+import com.teamA.data.player.PlayerControllerImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

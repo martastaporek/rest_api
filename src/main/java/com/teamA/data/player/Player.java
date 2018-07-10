@@ -1,4 +1,6 @@
-package com.teamA.data;
+package com.teamA.data.player;
+
+import com.teamA.data.AbstractEntity;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -29,9 +31,9 @@ public class Player extends AbstractEntity {
         return firstName;
     }
 
-//    public void setFirstName(String firstName) {
-//        this.firstName = firstName;
-//    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
     public String getLastName() {
         return lastName;
@@ -45,9 +47,9 @@ public class Player extends AbstractEntity {
         return birthYear;
     }
 
-//    public void setBirthYear(int birthYear) {
-//        this.birthYear = birthYear;
-//    }
+    public void setBirthYear(int birthYear) {
+        this.birthYear = birthYear;
+    }
 
     @Override
     public String toString() {

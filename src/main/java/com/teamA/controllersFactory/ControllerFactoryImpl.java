@@ -1,7 +1,7 @@
 package com.teamA.controllersFactory;
 
-import com.teamA.data.PlayerController;
-import com.teamA.data.PlayerControllerImpl;
+import com.teamA.data.player.PlayerController;
+import com.teamA.data.player.PlayerControllerImpl;
 
 import javax.persistence.EntityManager;
 
