@@ -1,11 +1,14 @@
 package com.teamA.serviceFactory;
 
+import com.teamA.data.match.MatchService;
+import com.teamA.data.match.MatchServiceImpl;
 import com.teamA.data.player.PlayerService;
 import com.teamA.data.player.PlayerServiceImpl;
 
 import javax.persistence.EntityManager;
 
 public class ServiceFactoryImpl implements ServiceFactory {
+
 
     private final EntityManager entityManager;
 
@@ -18,18 +21,34 @@ public class ServiceFactoryImpl implements ServiceFactory {
     }
 
     @Override
-    public <T extends PlayerService> PlayerService createPlayerController(Class<T> type) {
+    public <T extends PlayerService> PlayerService createPlayerService(Class<T> type) {
 
         String typeString = type.getSimpleName();
-        PlayerService controller;
+        PlayerService service;
         switch (typeString) {
             case("PlayerControllerImpl"):
-                controller = new PlayerServiceImpl(entityManager);
+                service = new PlayerServiceImpl(entityManager);
                 break;
             default:
-                controller = new PlayerServiceImpl(entityManager);
+                service = new PlayerServiceImpl(entityManager);
                 break;
         }
-        return controller;
+        return service;
+    }
+
+    @Override
+    public <T extends MatchService> MatchService createMatchService(Class<T> type) {
+
+        String typeString = type.getSimpleName();
+        MatchService service;
+        switch (typeString) {
+            case("MatchServiceImpl"):
+                service = new MatchServiceImpl(entityManager);
+                break;
+            default:
+                service = new MatchServiceImpl(entityManager);
+                break;
+        }
+        return service;
     }
 }
