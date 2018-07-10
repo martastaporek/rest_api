@@ -7,6 +7,6 @@ public class PersistenceFailure extends Exception {
     }
 
     public PersistenceFailure() {
-        super("Creation failure!");
+        super("Persistence failure!");
     }
 }
