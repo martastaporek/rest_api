@@ -60,6 +60,12 @@ public class RootImpl implements Root {
         return ServiceFactoryImpl.create(entityManager);
     }
 
+    private void makeFunWithTeam(ServiceFactory serviceFactory, EntityManager entityManager) {
+
+
+
+
+    }
 
     private void makeFunWithMatch(ServiceFactory serviceFactory, EntityManager entityManager) {
 
