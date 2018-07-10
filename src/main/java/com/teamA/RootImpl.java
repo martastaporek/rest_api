@@ -37,7 +37,7 @@ public class RootImpl implements Root {
         try {
 
 
-            loaded = playerService.loadPlayer("3");
+            loaded = playerService.loadPlayer("2");
             System.out.println(loaded);
 
 

@@ -3,6 +3,11 @@ package com.teamA.servletSupplier;
 import com.teamA.data.match.MatchService;
 import com.teamA.data.player.PlayerService;
 import com.teamA.data.team.TeamService;
+import com.teamA.helpers.DateTimerImpl;
+import com.teamA.logger.LogPath;
+import com.teamA.logger.LogWriterImpl;
+import com.teamA.logger.Logger;
+import com.teamA.logger.LoggerImpl;
 import com.teamA.serviceFactory.ServiceFactory;
 import com.teamA.serviceFactory.ServiceFactoryImpl;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
@@ -21,7 +26,10 @@ public class Supplier {
     private static EntityManager entityManager = entityManagerFactory.createEntityManager();
     private static ServiceTransactionHelper serviceTransactionHelper = ServiceTransactionHelperImpl
             .create(entityManager);
-    private static ServiceFactory serviceFactory = ServiceFactoryImpl.create(entityManager, serviceTransactionHelper);
+    private static Logger logger = LoggerImpl.getInstance(DateTimerImpl.getInstance(),
+            LogWriterImpl.getInstance(LogPath.SYSTEM_LOG));
+    private static ServiceFactory serviceFactory = ServiceFactoryImpl
+            .create(entityManager, serviceTransactionHelper, logger);
 
     private static PlayerService playerService;
     private static TeamService teamService;
@@ -32,6 +40,14 @@ public class Supplier {
             entityManager = entityManagerFactory.createEntityManager();
         }
         return entityManager;
+    }
+
+    public static Logger deliverLogger() {
+        if (logger == null) {
+            logger = LoggerImpl.getInstance(DateTimerImpl.getInstance(),
+                    LogWriterImpl.getInstance(LogPath.SYSTEM_LOG));
+        }
+        return logger;
     }
 
     public static <T extends PlayerService> PlayerService deliverPlayerService(Class<T> type) {

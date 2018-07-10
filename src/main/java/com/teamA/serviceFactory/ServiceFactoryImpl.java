@@ -6,6 +6,7 @@ import com.teamA.data.player.PlayerService;
 import com.teamA.data.player.PlayerServiceImpl;
 import com.teamA.data.team.TeamService;
 import com.teamA.data.team.TeamServiceImpl;
+import com.teamA.logger.Logger;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
@@ -15,14 +16,20 @@ public class ServiceFactoryImpl implements ServiceFactory {
 
     private final EntityManager entityManager;
     private final ServiceTransactionHelper serviceTransactionHelper;
+    private final Logger logger;
 
-    public static ServiceFactory create(EntityManager entityManager, ServiceTransactionHelper serviceTransactionHelper) {
-        return new ServiceFactoryImpl(entityManager, serviceTransactionHelper);
+    public static ServiceFactory create(EntityManager entityManager,
+                                        ServiceTransactionHelper serviceTransactionHelper,
+                                        Logger logger) {
+        return new ServiceFactoryImpl(entityManager, serviceTransactionHelper, logger);
     }
 
-    private ServiceFactoryImpl(EntityManager entityManager, ServiceTransactionHelper serviceTransactionHelper) {
+    private ServiceFactoryImpl(EntityManager entityManager,
+                               ServiceTransactionHelper serviceTransactionHelper,
+                               Logger logger) {
         this.entityManager = entityManager;
         this.serviceTransactionHelper = serviceTransactionHelper;
+        this.logger = logger;
     }
 
     @Override
@@ -32,10 +39,10 @@ public class ServiceFactoryImpl implements ServiceFactory {
         PlayerService service;
         switch (typeString) {
             case("PlayerControllerImpl"):
-                service = new PlayerServiceImpl(entityManager, serviceTransactionHelper);
+                service = new PlayerServiceImpl(entityManager, serviceTransactionHelper, logger);
                 break;
             default:
-                service = new PlayerServiceImpl(entityManager, serviceTransactionHelper);
+                service = new PlayerServiceImpl(entityManager, serviceTransactionHelper, logger);
                 break;
         }
         return service;
@@ -49,10 +56,10 @@ public class ServiceFactoryImpl implements ServiceFactory {
         MatchService service;
         switch (typeString) {
             case("MatchServiceImpl"):
-                service = new MatchServiceImpl(entityManager, serviceTransactionHelper, teamService);
+                service = new MatchServiceImpl(entityManager, serviceTransactionHelper, logger, teamService);
                 break;
             default:
-                service = new MatchServiceImpl(entityManager, serviceTransactionHelper, teamService);
+                service = new MatchServiceImpl(entityManager, serviceTransactionHelper, logger, teamService);
                 break;
         }
         return service;
@@ -65,10 +72,10 @@ public class ServiceFactoryImpl implements ServiceFactory {
         TeamService service;
         switch (typeString) {
             case("TeamServiceImpl"):
-                service = new TeamServiceImpl(entityManager, serviceTransactionHelper, playerService);
+                service = new TeamServiceImpl(entityManager, serviceTransactionHelper, logger, playerService);
                 break;
             default:
-                service = new TeamServiceImpl(entityManager, serviceTransactionHelper, playerService);
+                service = new TeamServiceImpl(entityManager, serviceTransactionHelper, logger, playerService);
                 break;
         }
         return service;
