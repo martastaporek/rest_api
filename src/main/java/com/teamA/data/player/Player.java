@@ -12,6 +12,7 @@ public class Player extends AbstractEntity {
     private String firstName;
     private String lastName;
     private int birthYear;
+
     @ManyToOne
     private Team team;
 
@@ -50,14 +51,7 @@ public class Player extends AbstractEntity {
         this.birthYear = birthYear;
     }
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthYear=" + birthYear +
-                "} " + super.toString();
-    }
+
 
     public Team getTeam() {
         return team;
@@ -65,5 +59,15 @@ public class Player extends AbstractEntity {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthYear=" + birthYear +
+                ", team=" + team +
+                "} " + super.toString();
     }
 }
