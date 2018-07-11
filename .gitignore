@@ -7,6 +7,7 @@
 
 # Log file
 *.log
+/logs.txt
 
 # BlueJ files
 *.ctxt
@@ -118,6 +119,10 @@ fabric.properties
 
 # Sonarlint plugin
 .idea/sonarlint
+
+
+*.txt
+/logs/systemLog/*
 
 
 # End of https://www.gitignore.io/api/intellij
