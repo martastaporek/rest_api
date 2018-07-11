@@ -1,0 +1,31 @@
+
+========report========
+Time: 2018-07-11 11:22:49
+Report: Persistence failure! STACK TRACE: [com.teamA.data.player.PlayerServiceImpl.loadPlayer(PlayerServiceImpl.java:99), com.teamA.RootImpl.makeFunWithPlayer(RootImpl.java:41), com.teamA.RootImpl.run(RootImpl.java:26), com.teamA.App.main(App.java:7)]
+========report========
+Time: 2018-07-11 11:22:50
+Report: Persistence failure! STACK TRACE: [com.teamA.data.team.TeamServiceImpl.loadTeam(TeamServiceImpl.java:66), com.teamA.data.team.TeamServiceImpl.registerPlayer(TeamServiceImpl.java:48), com.teamA.RootImpl.makeFunWithTeam(RootImpl.java:69), com.teamA.RootImpl.run(RootImpl.java:28), com.teamA.App.main(App.java:7)]
+========report========
+Time: 2018-07-11 11:22:50
+Report: the team with id 1001 does not exist STACK TRACE: [com.teamA.data.team.TeamServiceImpl.loadTeam(TeamServiceImpl.java:72), com.teamA.data.team.TeamServiceImpl.registerPlayer(TeamServiceImpl.java:48), com.teamA.RootImpl.makeFunWithTeam(RootImpl.java:69), com.teamA.RootImpl.run(RootImpl.java:28), com.teamA.App.main(App.java:7)]
+========report========
+Time: 2018-07-11 11:22:50
+Report: Persistence failure! STACK TRACE: [com.teamA.data.team.TeamServiceImpl.loadTeam(TeamServiceImpl.java:66), com.teamA.data.team.TeamServiceImpl.registerPlayer(TeamServiceImpl.java:48), com.teamA.RootImpl.makeFunWithTeam(RootImpl.java:70), com.teamA.RootImpl.run(RootImpl.java:28), com.teamA.App.main(App.java:7)]
+========report========
+Time: 2018-07-11 11:22:50
+Report: the team with id 1001 does not exist STACK TRACE: [com.teamA.data.team.TeamServiceImpl.loadTeam(TeamServiceImpl.java:72), com.teamA.data.team.TeamServiceImpl.registerPlayer(TeamServiceImpl.java:48), com.teamA.RootImpl.makeFunWithTeam(RootImpl.java:70), com.teamA.RootImpl.run(RootImpl.java:28), com.teamA.App.main(App.java:7)]
+========report========
+Time: 2018-07-11 11:22:50
+Report: Persistence failure! STACK TRACE: [com.teamA.data.team.TeamServiceImpl.loadTeam(TeamServiceImpl.java:66), com.teamA.data.team.TeamServiceImpl.registerPlayer(TeamServiceImpl.java:48), com.teamA.RootImpl.makeFunWithTeam(RootImpl.java:71), com.teamA.RootImpl.run(RootImpl.java:28), com.teamA.App.main(App.java:7)]
+========report========
+Time: 2018-07-11 11:22:50
+Report: the team with id 1001 does not exist STACK TRACE: [com.teamA.data.team.TeamServiceImpl.loadTeam(TeamServiceImpl.java:72), com.teamA.data.team.TeamServiceImpl.registerPlayer(TeamServiceImpl.java:48), com.teamA.RootImpl.makeFunWithTeam(RootImpl.java:71), com.teamA.RootImpl.run(RootImpl.java:28), com.teamA.App.main(App.java:7)]
+========report========
+Time: 2018-07-11 11:22:50
+Report: Persistence failure! STACK TRACE: [com.teamA.data.team.TeamServiceImpl.loadTeam(TeamServiceImpl.java:66), com.teamA.data.team.TeamServiceImpl.registerPlayer(TeamServiceImpl.java:48), com.teamA.RootImpl.makeFunWithTeam(RootImpl.java:72), com.teamA.RootImpl.run(RootImpl.java:28), com.teamA.App.main(App.java:7)]
+========report========
+Time: 2018-07-11 11:22:50
+Report: the team with id 1001 does not exist STACK TRACE: [com.teamA.data.team.TeamServiceImpl.loadTeam(TeamServiceImpl.java:72), com.teamA.data.team.TeamServiceImpl.registerPlayer(TeamServiceImpl.java:48), com.teamA.RootImpl.makeFunWithTeam(RootImpl.java:72), com.teamA.RootImpl.run(RootImpl.java:28), com.teamA.App.main(App.java:7)]
+========report========
+Time: 2018-07-11 11:22:50
+Report: Persistence failure! STACK TRACE: [com.teamA.data.team.TeamServiceImpl.loadTeam(TeamServiceImpl.java:66), com.teamA.RootImpl.makeFunWithTeam(RootImpl.java:76), com.teamA.RootImpl.run(RootImpl.java:28), com.teamA.App.main(App.java:7)]
