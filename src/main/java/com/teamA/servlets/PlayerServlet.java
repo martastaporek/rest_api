@@ -53,8 +53,8 @@ public class PlayerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
-        RequestDataRetriver dataRetriver = Supplier.deliverRequestDataRetriver();
-        String dataFromRequest = dataRetriver.getDataFromRequest(req);
+        RequestDataRetriver dataRetriever = Supplier.deliverRequestDataRetriver();
+        String dataFromRequest = dataRetriever.getDataFromRequest(req);
         Player player = parseJsonToPlayer(dataFromRequest);
 
         try {
@@ -83,8 +83,8 @@ public class PlayerServlet extends HttpServlet {
             resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
             return;
         }
-        RequestDataRetriver dataRetriver = Supplier.deliverRequestDataRetriver();
-        String dataFromRequest = dataRetriver.getDataFromRequest(req);
+        RequestDataRetriver dataRetriever = Supplier.deliverRequestDataRetriver();
+        String dataFromRequest = dataRetriever.getDataFromRequest(req);
         Player playerFromRequest = parseJsonToPlayer(dataFromRequest);
 
         if(!(player.getFirstName().equals(playerFromRequest.getFirstName())) && playerFromRequest.getFirstName() != null) {
