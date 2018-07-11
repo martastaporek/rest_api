@@ -1,5 +1,6 @@
 package com.teamA.databaseRejuvenator;
 
+import com.github.javafaker.Faker;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.player.Player;
 import com.teamA.data.player.PlayerService;
@@ -14,7 +15,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import javax.persistence.EntityManager;
-import java.util.Random;
+import javax.xml.stream.events.Characters;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PersistenceManager implements PersistenceFiller, PersistenceCleaner {
 
@@ -40,10 +43,12 @@ public class PersistenceManager implements PersistenceFiller, PersistenceCleaner
 
     @Override
     public void rejuvenate() throws PersistenceFailure {
-        createFirstPlayer();
         createEnglishTeam();
         createPolishTeam();
         createGermanTeam();
+        createDutchTeam();
+        createSpanishTeam();
+        createFrenchTeam();
 
         System.out.println("Done - DB populated!");
         System.exit(0);
@@ -77,62 +82,51 @@ public class PersistenceManager implements PersistenceFiller, PersistenceCleaner
         System.exit(0);
     }
 
-
-    private void createFirstPlayer() throws PersistenceFailure {
-        factory.createPlayerService(PlayerServiceImpl.class)
-                .createPlayer("Example", "Example", "0000");
-    }
-
     private void createGermanTeam() throws PersistenceFailure {
 
         TeamService teamService = factory.createTeamService(TeamServiceImpl.class);
-
         Team germanTeam = teamService.createTeam("Germany");
+        handleTeamCreation(new Faker(new Locale("de")), germanTeam, 11, true);
+    }
 
-        String[] firstNames = {"Hans", "Albion", "Sebastian", "Adolf", "Adi", "Adrian", "Fritz",
-                "Gustav", "Sigfried", "Harald", "Heinz"};
-        String[] lastNames = {"Alba", "Schwein", "Gundula", "Mann", "Berliner", "Dam", "Renski", "Tiger",
-                "Helm", "Pinot", "Brutt"};
+    private void createSpanishTeam() throws PersistenceFailure {
 
-        handleTeamCreation(firstNames, lastNames, germanTeam);
+        TeamService teamService = factory.createTeamService(TeamServiceImpl.class);
+        Team spanishTeam = teamService.createTeam("Spain");
+        handleTeamCreation(new Faker(new Locale("es")), spanishTeam, 11, true);
+    }
+
+    private void createFrenchTeam() throws PersistenceFailure {
+
+        TeamService teamService = factory.createTeamService(TeamServiceImpl.class);
+        Team frenchTeam = teamService.createTeam("France");
+        handleTeamCreation(new Faker(new Locale("fr")), frenchTeam, 11, true);
     }
 
     private void createPolishTeam() throws PersistenceFailure {
 
         TeamService teamService = factory.createTeamService(TeamServiceImpl.class);
-
         Team polishTeam = teamService.createTeam("Poland");
+        handleTeamCreation(new Faker(new Locale("pl")), polishTeam, 11, true);
 
-        String[] firstNames = {"Jan", "Marcin", "Tomasz", "Witek", "Mateusz", "Dominik", "Kuba",
-                "Józef", "Piotr", "Wiesiek", "Konrad"};
-        String[] lastNames = {"Kowalski", "Nowak", "Krakowski", "Wodnik", "Błaszczykowski",
-                "Panek", "Jaglo", "Biały",
-                "Szczotka", "Stolik", "Kuchar"};
+    }
 
-        handleTeamCreation(firstNames, lastNames, polishTeam);
+    private void createDutchTeam() throws PersistenceFailure {
+
+        TeamService teamService = factory.createTeamService(TeamServiceImpl.class);
+        Team dutchTeam = teamService.createTeam("Dutch");
+        handleTeamCreation(new Faker(new Locale("nl")), dutchTeam, 11, true);
 
     }
 
     private void createEnglishTeam() throws PersistenceFailure {
         TeamService teamService = factory.createTeamService(TeamServiceImpl.class);
-
         Team englishTeam = teamService.createTeam("England");
-
-        String[] firstNames = {"Johnny", "Bryan", "Conrad", "Peter", "Rob", "Domenic", "Daniel",
-                "Alex", "Joseph", "Bruce", "Mateo"};
-        String[] lastNames = {"Smith", "Robin", "Sherwood", "Nothingham", "White",
-                "Bond", "Cly", "Black",
-                "Horn", "Cook", "Yolo"};
-
-        handleTeamCreation(firstNames, lastNames, englishTeam);
+        handleTeamCreation(new Faker(new Locale("en-GB")), englishTeam, 11, true);
     }
 
-    private void handleTeamCreation(String[] firstNames, String[] lastNames, Team team)
+    private void handleTeamCreation(Faker faker, Team team, int numberOfPlayers, boolean isMaleTeam)
             throws PersistenceFailure {
-
-        if (firstNames.length != 11 && lastNames.length != 11) {
-            throw new IllegalArgumentException("Provide correct names!");
-        }
 
         TeamService teamService = factory.createTeamService(TeamServiceImpl.class);
         PlayerService playerService = factory.createPlayerService(PlayerServiceImpl.class);
@@ -142,15 +136,40 @@ public class PersistenceManager implements PersistenceFiller, PersistenceCleaner
         int baseBirthDayYear = 1985;
         int ageRange = 15;
 
-        for (int i=0; i<firstNames.length; i++) {
+        for (int i=0; i<numberOfPlayers; i++) {
             int playerAge = chaos.nextInt(ageRange)+ baseBirthDayYear;
+            String firstName;
 
-            Player player = playerService.createPlayer( firstNames[i],
-                    lastNames[i],
+            if (isMaleTeam) {
+
+                firstName = getMaleName(faker);
+            } else {
+                firstName = getFemaleName(faker);
+            }
+
+            Player player = playerService.createPlayer(
+                    firstName,
+                    faker.name().lastName(),
                     String.valueOf(playerAge));
 
             String playerId = String.valueOf(player.getId());
             teamService.registerPlayer(teamId, playerId);
         }
+    }
+
+    private String getMaleName(Faker faker) {
+        String firstName = "";
+        while (firstName.length() < 2 || firstName.matches(".*[aeiou]$")) {
+            firstName = faker.name().firstName();
+        }
+        return firstName;
+    }
+
+    private String getFemaleName(Faker faker) {
+        String firstName = "";
+        while (firstName.length() < 2 || ! firstName.matches(".*[aeiou]$")) {
+            firstName = faker.name().firstName();
+        }
+        return firstName;
     }
 }
