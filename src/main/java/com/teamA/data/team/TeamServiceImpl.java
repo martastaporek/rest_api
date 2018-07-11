@@ -31,7 +31,7 @@ public class TeamServiceImpl implements TeamService {
             Team team = new Team(name);
             long maxId = serviceTransactionHelper.getMaxFreeId();
             team.setId(maxId + 1);
-            if (! serviceTransactionHelper.saveEntity(team)) {
+            if (! serviceTransactionHelper.saveNewEntity(team)) {
                 throw new PersistenceFailure();
             }
             return team;
@@ -49,8 +49,8 @@ public class TeamServiceImpl implements TeamService {
             Player player = playerService.loadPlayer(playerId);
             team.getPlayers().add(player);
             player.setTeam(team);
-            serviceTransactionHelper.saveEntity(player);
-            return serviceTransactionHelper.saveEntity(team);
+            serviceTransactionHelper.updateEntity(player);
+            return serviceTransactionHelper.updateEntity(team);
         } catch (Exception ex) {
             logger.log(ex);
             return false;

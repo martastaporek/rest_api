@@ -26,6 +26,4 @@ public class RootImpl implements Root {
 
     }
 
-
-
 }

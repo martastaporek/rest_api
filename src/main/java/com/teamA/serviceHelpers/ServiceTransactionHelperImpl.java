@@ -27,18 +27,13 @@ public class ServiceTransactionHelperImpl implements ServiceTransactionHelper {
     }
 
     @Override
-    public <T extends AbstractEntity> boolean saveEntity(T entity) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.persist(entity);
-            transaction.commit();
-        } catch (Exception notUsed) {
-            rollBackTransaction(transaction);
-            return false;
-        }
-        return true;
+    public <T extends AbstractEntity> boolean saveNewEntity(T entity) {
+        return save(entity, true);
+    }
+
+    @Override
+    public <T extends AbstractEntity> boolean updateEntity(T entity) {
+        return save(entity, false);
     }
 
     private void rollBackTransaction(EntityTransaction transaction) {
@@ -47,5 +42,23 @@ public class ServiceTransactionHelperImpl implements ServiceTransactionHelper {
                 transaction.rollback();
             } catch (Exception notUsed) {}
         }
+    }
+
+    private <T extends AbstractEntity> boolean save(T entity, boolean isNewEntity) {
+        EntityTransaction transaction = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            if (isNewEntity) {
+                entityManager.persist(entity);
+            } else {
+                entityManager.merge(entity);
+            }
+            transaction.commit();
+        } catch (Exception notUsed) {
+            rollBackTransaction(transaction);
+            return false;
+        }
+        return true;
     }
 }
