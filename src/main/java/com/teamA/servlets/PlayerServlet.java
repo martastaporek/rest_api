@@ -48,21 +48,27 @@ public class PlayerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BufferedReader reader = req.getReader();
         JsonParser jsonParser = Supplier.deliverJsonParser();
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while((line = reader.readLine())!= null) {
-            sb.append(line);
-        }
-        JsonObject jsonObject = jsonParser.parse(sb.toString());
-        Player player = jsonParser.parse(jsonObject, Player.class);
-        System.out.println(player);
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
+
+        String dataFromRequest = getDataFromRequest(req);
+        JsonObject jsonObject = jsonParser.parse(dataFromRequest);
+        Player player = jsonParser.parse(jsonObject, Player.class);
+
         try {
             playerService.createPlayer(player.getFirstName(), player.getLastName(), String.valueOf(player.getBirthYear()));
         } catch (PersistenceFailure persistenceFailure) {
             persistenceFailure.printStackTrace();
         }
+    }
+
+    private String getDataFromRequest(HttpServletRequest req) throws IOException {
+        BufferedReader reader = req.getReader();
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while((line = reader.readLine())!= null) {
+            sb.append(line);
+        }
+        return sb.toString();
     }
 }
