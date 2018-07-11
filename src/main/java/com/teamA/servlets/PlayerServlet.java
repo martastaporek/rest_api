@@ -5,8 +5,7 @@ import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.player.Player;
 import com.teamA.data.player.PlayerService;
 import com.teamA.parsers.JsonParser;
-import com.teamA.servletSupplier.Supplier;
-
+import com.teamA.supplier.Supplier;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

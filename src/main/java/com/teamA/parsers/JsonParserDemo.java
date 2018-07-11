@@ -4,7 +4,7 @@ import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.player.Player;
 import com.teamA.data.player.PlayerService;
 import com.teamA.data.player.PlayerServiceImpl;
-import com.teamA.servletSupplier.Supplier;
+import com.teamA.supplier.Supplier;
 
 public class JsonParserDemo {
 
