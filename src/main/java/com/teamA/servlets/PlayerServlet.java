@@ -1,10 +1,10 @@
 package com.teamA.servlets;
 
-import com.google.gson.Gson;
-
+import com.google.gson.JsonObject;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.player.Player;
 import com.teamA.data.player.PlayerService;
+import com.teamA.parsers.JsonParser;
 import com.teamA.servletSupplier.Supplier;
 
 
@@ -25,6 +25,7 @@ public class PlayerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter out = resp.getWriter();
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
+        JsonParser jsonParser = Supplier.deliverJsonParser();
         resp.setContentType("application/json");
 
         String pathInfo = req.getPathInfo();
@@ -38,26 +39,24 @@ public class PlayerServlet extends HttpServlet {
             resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
             return;
         }
-        Gson gson = new Gson();
 
         if(id == null || id.equals("/")) {
             // tu można by zrobić wyciąganie wszystkich zawodników
         }
-        out.println(gson.toJson(player));
+        out.println(jsonParser.parse(player));
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BufferedReader reader = req.getReader();
-
+        JsonParser jsonParser = Supplier.deliverJsonParser();
         StringBuilder sb = new StringBuilder();
         String line;
         while((line = reader.readLine())!= null) {
             sb.append(line);
         }
-
-        Gson gson = new Gson();
-        Player player = gson.fromJson(sb.toString(), Player.class);
+        JsonObject jsonObject = jsonParser.parse(sb.toString());
+        Player player = jsonParser.parse(jsonObject, Player.class);
         System.out.println(player);
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
         try {
