@@ -2,7 +2,6 @@ package com.teamA.data.team;
 
 import com.teamA.data.AbstractEntity;
 import com.teamA.data.player.Player;
-import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,8 +26,6 @@ public class Team extends AbstractEntity {
     protected Team() {
         super();
     }
-
-
 
     public String getName() {
         return name;

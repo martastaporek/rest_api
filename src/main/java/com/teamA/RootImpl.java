@@ -33,20 +33,30 @@ public class RootImpl implements Root {
     private void makeFunWithPlayer() {
 
         PlayerService playerService = Supplier.deliverPlayerService(PlayerServiceImpl.class);
+        TeamService teamService = Supplier.deliverTeamService(TeamServiceImpl.class);
         Player loaded;
         try {
 
 
             loaded = playerService.loadPlayer("2");
+
+            System.out.println("his age: " + playerService.getAge("2"));
+            System.out.println(loaded);
+            playerService.changeFirstName("2", "Mario has new name");
+            playerService.changeLastName("2", "Youghurt it's new lastName");
+            System.out.println(playerService.getFullName("2"));
             System.out.println(loaded);
 
+            System.out.println("My team before: " + loaded.getTeam());
+
+            teamService.registerPlayer("4", "2");
+
+            System.out.println("My team after: " + loaded.getTeam());
 
 
         } catch (PersistenceFailure persistenceFailure) {
             persistenceFailure.printStackTrace();
         }
-
-
     }
 
 
