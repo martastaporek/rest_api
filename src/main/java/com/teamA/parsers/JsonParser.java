@@ -7,4 +7,5 @@ public interface JsonParser {
 
     <T extends AbstractEntity> String parse(T entity);
     <T extends AbstractEntity> T parse(JsonObject json, Class<T> entityType);
+    <T extends AbstractEntity> JsonObject parse(String jsonString);
 }
