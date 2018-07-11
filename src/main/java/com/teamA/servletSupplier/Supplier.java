@@ -15,6 +15,8 @@ import com.teamA.serviceFactory.ServiceFactory;
 import com.teamA.serviceFactory.ServiceFactoryImpl;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 import com.teamA.serviceHelpers.ServiceTransactionHelperImpl;
+import com.teamA.servletHelper.RequestDataRetriver;
+import com.teamA.servletHelper.RequestDataRetriverImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -38,6 +40,7 @@ public class Supplier {
     private static TeamService teamService;
     private static MatchService matchService;
     private static JsonParser jsonParser;
+    private static RequestDataRetriver dataRetriver;
 
     public static Logger deliverLogger() {
         if (logger == null) {
@@ -80,5 +83,12 @@ public class Supplier {
             jsonParser = new JsonParserImpl(new Gson(), new com.google.gson.JsonParser());
         }
         return jsonParser;
+    }
+
+    public static RequestDataRetriver deliverRequestDataRetriver() {
+        if(dataRetriver == null) {
+            dataRetriver = new RequestDataRetriverImpl();
+        }
+        return dataRetriver;
     }
 }
