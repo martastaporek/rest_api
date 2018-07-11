@@ -13,7 +13,7 @@ public class Player extends AbstractEntity {
     private String lastName;
     private int birthYear;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Team team;
 
     Player(String firstName, String lastName, int birthYear) {

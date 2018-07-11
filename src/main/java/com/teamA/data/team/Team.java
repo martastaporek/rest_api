@@ -15,7 +15,7 @@ public class Team extends AbstractEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "team")
     private List<Player> players = new ArrayList<>();
 
     Team(String name) {

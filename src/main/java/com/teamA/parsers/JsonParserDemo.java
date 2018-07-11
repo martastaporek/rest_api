@@ -14,7 +14,7 @@ public class JsonParserDemo {
         PlayerService playerService = Supplier.deliverPlayerService(PlayerServiceImpl.class);
 
         try {
-            Player player = playerService.loadPlayer("2");
+            Player player = playerService.loadPlayer("100");
 
             String playerAsString = parser.parse(player);
 

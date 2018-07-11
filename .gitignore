@@ -7,6 +7,7 @@
 
 # Log file
 *.log
+/logs.txt
 
 # BlueJ files
 *.ctxt
@@ -121,5 +122,7 @@ fabric.properties
 
 
 *.txt
+/logs/systemLog/*
+
 
 # End of https://www.gitignore.io/api/intellij
