@@ -1,5 +1,6 @@
 package com.teamA.data.player;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.teamA.data.AbstractEntity;
 import com.teamA.data.team.Team;
 
@@ -13,7 +14,8 @@ public class Player extends AbstractEntity {
     private String lastName;
     private int birthYear;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonBackReference
     private Team team;
 
     Player(String firstName, String lastName, int birthYear) {

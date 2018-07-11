@@ -1,8 +1,11 @@
 package com.teamA.parsers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.teamA.customExceptions.JsonFailure;
 import com.teamA.data.AbstractEntity;
 
 public class JsonParserImpl implements com.teamA.parsers.JsonParser {
@@ -14,6 +17,16 @@ public class JsonParserImpl implements com.teamA.parsers.JsonParser {
         this.gson = gson;
         this.jsonParser = jsonParser;
     }
+
+//    @Override
+//    public <T extends AbstractEntity> String parse(T entity) throws JsonFailure {
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            return mapper.writeValueAsString(entity);
+//        } catch (JsonProcessingException e) {
+//            throw new JsonFailure(e.getMessage());
+//        }
+//    }
 
     @Override
     public <T extends AbstractEntity> String parse(T entity) {

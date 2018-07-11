@@ -1,6 +1,7 @@
 package com.teamA.servlets;
 
 import com.google.gson.JsonObject;
+import com.teamA.customExceptions.JsonFailure;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.player.Player;
 import com.teamA.data.player.PlayerService;
@@ -30,12 +31,12 @@ public class PlayerServlet extends HttpServlet {
             Player player;
             try {
                 player = getPlayerFromRequestData(id);
-            } catch (PersistenceFailure persistenceFailure) {
-                persistenceFailure.printStackTrace();
+                out.println(jsonParser.parse(player));
+            } catch (PersistenceFailure ex) {
+                ex.printStackTrace();
                 resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
                 return;
             }
-            out.println(jsonParser.parse(player));
         }
     }
 
