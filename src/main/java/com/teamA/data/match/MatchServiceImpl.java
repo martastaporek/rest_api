@@ -33,7 +33,7 @@ public class MatchServiceImpl implements MatchService {
             long currentMaxId = serviceTransactionHelper.getMaxFreeId();
             Match match = new Match(firstTeam, secondTeam, location);
             match.setId(currentMaxId+1);
-            if (! serviceTransactionHelper.saveEntity(match)) {
+            if (! serviceTransactionHelper.saveNewEntity(match)) {
                 throw new PersistenceFailure();
             }
             return match;
@@ -56,7 +56,7 @@ public class MatchServiceImpl implements MatchService {
             score = match.getSecondTeamScore();
             match.setSecondTeamScore(++score);
         }
-        return serviceTransactionHelper.saveEntity(match);
+        return serviceTransactionHelper.updateEntity(match);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class MatchServiceImpl implements MatchService {
             logger.log(ex.getMessage());
             return false;
         }
-        return serviceTransactionHelper.saveEntity(match);
+        return serviceTransactionHelper.updateEntity(match);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public boolean changeLocation(Match match, String location) {
         match.setLocation(location);
-        return serviceTransactionHelper.saveEntity(match);
+        return serviceTransactionHelper.updateEntity(match);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class PlayerServiceImpl implements PlayerService {
             long currentMaxId = serviceTransactionHelper.getMaxFreeId();
             Player player = new Player(firstName, lastName, birthYearAsInt);
             player.setId(currentMaxId+1);
-            if (! serviceTransactionHelper.saveEntity(player)) {
+            if (! serviceTransactionHelper.saveNewEntity(player)) {
                 throw new PersistenceFailure();
             }
             return player;
@@ -44,7 +44,7 @@ public class PlayerServiceImpl implements PlayerService {
         try {
             Player player = loadPlayer(playerId);
             player.setFirstName(firstName);
-            serviceTransactionHelper.saveEntity(player);
+            serviceTransactionHelper.updateEntity(player);
         } catch (PersistenceFailure persistenceFailure) {
             logger.log(persistenceFailure);
             return false;
@@ -57,7 +57,7 @@ public class PlayerServiceImpl implements PlayerService {
         try {
             Player player = loadPlayer(playerId);
             player.setLastName(lastName);
-            serviceTransactionHelper.saveEntity(player);
+            serviceTransactionHelper.updateEntity(player);
         } catch (PersistenceFailure persistenceFailure) {
             logger.log(persistenceFailure);
             return false;

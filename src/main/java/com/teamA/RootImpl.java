@@ -42,8 +42,8 @@ public class RootImpl implements Root {
 
             System.out.println("his age: " + playerService.getAge("2"));
             System.out.println(loaded);
-            playerService.changeFirstName("102", "Mario has new name");
-            playerService.changeLastName("102", "Youghurt it's new lastName");
+            playerService.changeFirstName("102", "Mario has BRAND new name");
+            playerService.changeLastName("102", "Yolo it's new lastName");
             System.out.println(playerService.getFullName("102"));
             System.out.println(loaded);
 
