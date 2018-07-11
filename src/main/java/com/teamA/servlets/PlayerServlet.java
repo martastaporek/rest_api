@@ -18,42 +18,44 @@ import java.io.PrintWriter;
 
 public class PlayerServlet extends HttpServlet {
 
-
-
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter out = resp.getWriter();
-        PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
         JsonParser jsonParser = Supplier.deliverJsonParser();
         resp.setContentType("application/json");
-
-        String pathInfo = req.getPathInfo();
-        String id = pathInfo.replace("/", "");
-
-        Player player;
-        try {
-            player = playerService.loadPlayer(id);
-        } catch (PersistenceFailure persistenceFailure) {
-            persistenceFailure.printStackTrace();
-            resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
-            return;
-        }
+        String id = getIdFromRequestData(req);
 
         if(id == null || id.equals("/")) {
-            // tu można by zrobić wyciąganie wszystkich zawodników
+            // miejsce dla wyciagania wszystkich zawodników
+        } else {
+            Player player;
+            try {
+                player = getPlayerFromRequestData(id);
+            } catch (PersistenceFailure persistenceFailure) {
+                persistenceFailure.printStackTrace();
+                resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
+                return;
+            }
+            out.println(jsonParser.parse(player));
         }
-        out.println(jsonParser.parse(player));
+    }
+
+    private String getIdFromRequestData(HttpServletRequest req) {
+        String pathInfo = req.getPathInfo();
+        return pathInfo.replace("/", "");
+    }
+
+    private Player getPlayerFromRequestData(String id) throws PersistenceFailure {
+        PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
+        return playerService.loadPlayer(id);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonParser jsonParser = Supplier.deliverJsonParser();
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
 
         String dataFromRequest = getDataFromRequest(req);
-        JsonObject jsonObject = jsonParser.parse(dataFromRequest);
-        Player player = jsonParser.parse(jsonObject, Player.class);
+        Player player = parseJsonToPlayer(dataFromRequest);
 
         try {
             playerService.createPlayer(player.getFirstName(), player.getLastName(), String.valueOf(player.getBirthYear()));
@@ -70,5 +72,37 @@ public class PlayerServlet extends HttpServlet {
             sb.append(line);
         }
         return sb.toString();
+    }
+
+    private Player parseJsonToPlayer(String dataFromRequest) {
+        JsonParser jsonParser = Supplier.deliverJsonParser();
+        JsonObject jsonObject = jsonParser.parse(dataFromRequest);
+        return jsonParser.parse(jsonObject, Player.class);
+
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
+        String id = getIdFromRequestData(req);
+        Player player;
+        try {
+            player = getPlayerFromRequestData(id);
+        } catch (PersistenceFailure persistenceFailure) {
+            persistenceFailure.printStackTrace();
+            resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
+            return;
+        }
+
+        String dataFromRequest = getDataFromRequest(req);
+        Player playerFromRequest = parseJsonToPlayer(dataFromRequest);
+
+        if(!(player.getFirstName().equals(playerFromRequest.getFirstName())) && playerFromRequest.getFirstName() != null) {
+            playerService.changeFirstName(String.valueOf(player.getId()), playerFromRequest.getFirstName());
+        }
+
+        if(!(player.getLastName().equals(playerFromRequest.getLastName())) && playerFromRequest.getLastName() != null) {
+            playerService.changeLastName(String.valueOf(player.getId()), playerFromRequest.getLastName());
+        }
     }
 }
