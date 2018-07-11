@@ -20,7 +20,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>PlayerServlet</servlet-name>
-		<url-pattern>/players/*</url-pattern>
+		<url-pattern>/mundial/players/*</url-pattern>
 	</servlet-mapping>
 
     <resource-ref>
