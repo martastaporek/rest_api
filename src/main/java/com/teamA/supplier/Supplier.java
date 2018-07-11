@@ -86,7 +86,7 @@ public class Supplier {
 
     public static JsonParser deliverJsonParser() {
         if (jsonParser == null) {
-            jsonParser = new JsonParserImpl(new Gson());
+            jsonParser = new JsonParserImpl(new Gson(), new com.google.gson.JsonParser());
         }
         return jsonParser;
     }
