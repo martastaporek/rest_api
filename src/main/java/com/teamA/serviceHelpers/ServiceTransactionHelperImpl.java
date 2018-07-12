@@ -1,5 +1,6 @@
 package com.teamA.serviceHelpers;
 
+import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.AbstractEntity;
 
 import javax.persistence.EntityManager;
@@ -34,6 +35,27 @@ public class ServiceTransactionHelperImpl implements ServiceTransactionHelper {
     @Override
     public <T extends AbstractEntity> boolean updateEntity(T entity) {
         return save(entity, false);
+    }
+
+    @Override
+    public <T extends AbstractEntity> void removeEntity(String entityId, Class<T> entityType)
+            throws PersistenceFailure {
+
+        EntityTransaction transaction = null;
+
+        try {
+            long id = Long.parseLong(entityId);
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            T entity = entityManager.find(entityType, id);
+            entityManager.remove(entity);
+            transaction.commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            rollBackTransaction(transaction);
+            throw new PersistenceFailure(e.getMessage());
+        }
     }
 
     private void rollBackTransaction(EntityTransaction transaction) {

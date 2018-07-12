@@ -102,7 +102,7 @@ public class PlayerServiceImpl implements PlayerService {
             return player;
         } catch (NumberFormatException | PersistenceFailure ex) {
             logger.log(ex);
-            String failureInfo = String.format("the player with id %s could not be created", id);
+            String failureInfo = String.format("the player with id %s could not be loaded", id);
             throw new PersistenceFailure(failureInfo);
         }
     }
@@ -115,7 +115,19 @@ public class PlayerServiceImpl implements PlayerService {
             List<Player> players = query.getResultList();
             return players;
         } catch (Exception e) {
+            logger.log(e);
             throw new PersistenceFailure(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean removePlayer(String playerId) {
+        try {
+            serviceTransactionHelper.removeEntity(playerId, Player.class);
+            return true;
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
+            return false;
         }
     }
 }

@@ -13,4 +13,5 @@ public interface PlayerService {
     String getFullName(String playerId);
     Player loadPlayer(String id) throws PersistenceFailure;
     Collection<Player> getAllPlayers() throws PersistenceFailure;
+    boolean removePlayer(String playerId);
 }

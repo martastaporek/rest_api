@@ -14,7 +14,7 @@ public class Player extends AbstractEntity {
     private String lastName;
     private int birthYear;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference
     private Team team;
 
