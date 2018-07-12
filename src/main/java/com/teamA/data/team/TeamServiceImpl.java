@@ -104,4 +104,16 @@ public class TeamServiceImpl implements TeamService {
         }
         return true;
     }
+
+    @Override
+    public boolean deleteTeam(String teamId) throws PersistenceFailure {
+        try {
+            Team team = loadTeam(teamId);
+//            serviceTransactionHelper.deleteEntity(teamId)
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
+            return false;
+        }
+        return true;
+    }
 }
