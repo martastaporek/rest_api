@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 public class PlayerServlet extends HttpServlet {
@@ -80,11 +79,11 @@ public class PlayerServlet extends HttpServlet {
             Player playerFromRequest = Supplier.deliverJsonParser()
                     .parse(dataFromRequest, Player.class);
 
-            if(!(player.getFirstName().equals(playerFromRequest.getFirstName())) && playerFromRequest.getFirstName() != null) {
+            if(isFirstNameChanged(player, playerFromRequest)) {
                 playerService.changeFirstName(String.valueOf(player.getId()), playerFromRequest.getFirstName());
             }
 
-            if(!(player.getLastName().equals(playerFromRequest.getLastName())) && playerFromRequest.getLastName() != null) {
+            if(isLastNameChanged(player, playerFromRequest)) {
                 playerService.changeLastName(String.valueOf(player.getId()), playerFromRequest.getLastName());
             }
 
@@ -94,6 +93,13 @@ public class PlayerServlet extends HttpServlet {
             resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
             return;
         }
+    }
 
+    private boolean isFirstNameChanged(Player player, Player playerFromRequest) {
+        return !(player.getFirstName().equals(playerFromRequest.getFirstName())) && playerFromRequest.getFirstName() != null;
+    }
+
+    private boolean isLastNameChanged(Player player, Player playerFromRequest) {
+        return !(player.getLastName().equals(playerFromRequest.getLastName())) && playerFromRequest.getLastName() != null;
     }
 }
