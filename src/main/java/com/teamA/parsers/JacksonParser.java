@@ -30,7 +30,7 @@ public class JacksonParser implements JsonParser {
     }
 
     @Override
-    public <T extends AbstractEntity> String parse(List<T> entityList) throws JsonFailure {
+    public <T extends AbstractEntity> String parseList(List<T> entityList) throws JsonFailure {
         try {
             return mapper.writeValueAsString(entityList);
         } catch (JsonProcessingException e) {
