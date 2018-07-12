@@ -93,6 +93,26 @@ public class TeamServlet extends HttpServlet {
 
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse res) throws IOException{
+
+        TeamService teamService = Supplier.deliverTeamService(TeamService.class);
+        String id = getIdFromRequestData(req);
+        Team team;
+
+        try {
+            team = getTeamFromRequestData(id);
+            String dataFromRequest = Supplier.deliverRequestDataRetriver().getDataFromRequest(req);
+            Team teamFromRequest = Supplier.deliverJsonParser().parse(dataFromRequest, Team.class);
+
+        } catch (PersistenceFailure | JsonFailure failure) {
+            failure.printStackTrace();
+            res.sendError(400, "Wrong URL! Usage: http://localhost:8080/teams/{id}");
+            return;
+        }
+
+    }
+
     private List<Team> getAllTeams() throws PersistenceFailure {
         TeamService teamService = Supplier.deliverTeamService(TeamService.class);
         return teamService.loadAllTeams();
