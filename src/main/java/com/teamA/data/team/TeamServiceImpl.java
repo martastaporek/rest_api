@@ -7,6 +7,8 @@ import com.teamA.logger.Logger;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TeamServiceImpl implements TeamService {
 
@@ -74,6 +76,46 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public List <Team> loadAllTeams() throws PersistenceFailure{
+      
+        try {
+            List <Team> teams = entityManager.createQuery("select t from team t ", Team.class).getResultList();
+            if(teams == null){
+                throw new PersistenceFailure();
+            }
+            return teams;
+        }catch (PersistenceFailure ex){
+            logger.log(ex);
+            throw new PersistenceFailure();
+        }
+
+    }
+
+    @Override
+    public boolean changeName(String teamId, String teamName) throws PersistenceFailure {
+        try {
+            Team team = loadTeam(teamId);
+            team.setName(teamName);
+            serviceTransactionHelper.updateEntity(team);
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteTeam(String teamId) throws PersistenceFailure {
+        try {
+            Team team = loadTeam(teamId);
+//            serviceTransactionHelper.deleteEntity(teamId)
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
+            return false;
+        }
+        return true;
+    }
+  
     public Team loadTeamByName(String teamName) throws PersistenceFailure {
 
         String query = "select e from team e where e.name = :name";

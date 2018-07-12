@@ -108,7 +108,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Collection<Player> getAllPlayers() throws PersistenceFailure {
+    public List<Player> getAllPlayers() throws PersistenceFailure {
         try {
             TypedQuery query = entityManager.createQuery("SELECT e FROM player e", Player.class);
             @SuppressWarnings("unchecked")
