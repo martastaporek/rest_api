@@ -19,7 +19,6 @@ public class PlayerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
         JsonParser jsonParser = Supplier.deliverJsonParser();
         resp.setContentType("application/json");
         String id = getIdFromRequestData(req);
@@ -32,7 +31,7 @@ public class PlayerServlet extends HttpServlet {
             Player player;
             try {
                 player = getPlayerFromRequestData(id);
-                out.println(jsonParser.parse(player));
+                resp.getWriter().println(jsonParser.parse(player));
             } catch (PersistenceFailure | JsonFailure failure) {
                 failure.printStackTrace();
                 resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
