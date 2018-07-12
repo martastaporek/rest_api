@@ -1,5 +1,6 @@
 package com.teamA;
 
+
 public class RootImpl implements Root {
 
     public static Root getInstance() {
@@ -10,7 +11,6 @@ public class RootImpl implements Root {
 
     @Override
     public void run() {
-
 
     }
 

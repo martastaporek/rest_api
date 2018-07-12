@@ -12,4 +12,6 @@ public interface TeamService {
     List<Team> loadAllTeams() throws PersistenceFailure;
     boolean changeName(String teamId, String teamName) throws PersistenceFailure;
     boolean deleteTeam(String teamId) throws PersistenceFailure;
+    Team loadTeam(String id) throws PersistenceFailure;
+    Team loadTeamByName(String teamName) throws PersistenceFailure;
 }

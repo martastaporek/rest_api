@@ -77,8 +77,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List <Team> loadAllTeams() throws PersistenceFailure{
-
-
+      
         try {
             List <Team> teams = entityManager.createQuery("select t from team t ", Team.class).getResultList();
             if(teams == null){
@@ -115,5 +114,17 @@ public class TeamServiceImpl implements TeamService {
             return false;
         }
         return true;
+    }
+  
+    public Team loadTeamByName(String teamName) throws PersistenceFailure {
+
+        String query = "select e from team e where e.name = :name";
+        Team team = entityManager.createQuery(query, Team.class)
+                .setParameter("name", teamName)
+                .getSingleResult();
+        if (team == null) {
+            throw new PersistenceFailure("Can't find team with name: " + teamName);
+        }
+        return team;
     }
 }
