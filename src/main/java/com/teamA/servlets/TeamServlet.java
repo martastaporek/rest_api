@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 public class TeamServlet extends HttpServlet {
 
@@ -26,8 +27,18 @@ public class TeamServlet extends HttpServlet {
         JsonParser jsonParser = Supplier.deliverJsonParser();
         resp.setContentType("application/json");
         String id = getIdFromRequestData(req);
-        if(id == null || id.equals("/")) {
-            // todo miejsce dla wyciagania wszystkich teamow
+        if(id.equals("")) {
+            try {
+
+                List<Team> teams = getAllTeams();
+                for(Team team: teams){
+                    out.println(team);
+                }
+            }catch (PersistenceFailure ex){
+                ex.printStackTrace();
+                resp.sendError(400, "No players");
+                return;
+            }
         } else {
             Team team;
             try {
@@ -40,6 +51,29 @@ public class TeamServlet extends HttpServlet {
             }
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        TeamService teamService = Supplier.deliverTeamService(TeamService.class);
+
+        RequestDataRetriver dataRetriever = Supplier.deliverRequestDataRetriver();
+        String dataFromRequest = dataRetriever.getDataFromRequest(req);
+
+        try {
+
+            Team team = Supplier.deliverJsonParser().parse(dataFromRequest, Team.class);
+            teamService.createTeam(team.getName());
+
+        } catch (PersistenceFailure | JsonFailure failure) {
+            failure.printStackTrace();
+        }
+    }
+
+    private List<Team> getAllTeams() throws PersistenceFailure {
+        TeamService teamService = Supplier.deliverTeamService(TeamService.class);
+        return teamService.loadAllTeams();
+    }
+
     private String getIdFromRequestData(HttpServletRequest req) {
         String pathInfo = req.getPathInfo();
         return pathInfo.replace("/", "");
