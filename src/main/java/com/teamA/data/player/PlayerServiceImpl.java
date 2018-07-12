@@ -5,7 +5,7 @@ import com.teamA.logger.Logger;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.*;
 
 public class PlayerServiceImpl implements PlayerService {
@@ -107,16 +107,12 @@ public class PlayerServiceImpl implements PlayerService {
         }
     }
 
-    @SuppressWarnings("unchecked")  // Query returns just List (without generic type)
     @Override
     public Collection<Player> getAllPlayers() throws PersistenceFailure {
-
         try {
-            Query query = entityManager.createQuery("SELECT e FROM player e", Player.class);
+            TypedQuery query = entityManager.createQuery("SELECT e FROM player e", Player.class);
+            @SuppressWarnings("unchecked")
             List<Player> players = query.getResultList();
-            if (players == null || (players.size()>0 && ! (players.get(0) == null)) ) {
-                throw new PersistenceFailure();
-            }
             return players;
         } catch (Exception e) {
             throw new PersistenceFailure(e.getMessage());

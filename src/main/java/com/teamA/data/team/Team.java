@@ -17,7 +17,7 @@ public class Team extends AbstractEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Player> players = new ArrayList<>();
 
