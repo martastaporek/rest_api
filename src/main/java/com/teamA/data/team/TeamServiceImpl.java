@@ -7,6 +7,7 @@ import com.teamA.logger.Logger;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
+import javax.persistence.RollbackException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public boolean changeName(String teamId, String teamName) throws PersistenceFailure {
+    public boolean changeName(String teamId, String teamName) {
         try {
             Team team = loadTeam(teamId);
             team.setName(teamName);
@@ -105,15 +106,14 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public boolean deleteTeam(String teamId) throws PersistenceFailure {
+    public boolean deleteTeam(String teamId) {
         try {
-            Team team = loadTeam(teamId);
-//            serviceTransactionHelper.deleteEntity(teamId)
-        } catch (PersistenceFailure persistenceFailure) {
+            serviceTransactionHelper.removeEntity(teamId, Team.class);
+            return true;
+        } catch (RollbackException | PersistenceFailure persistenceFailure) {
             logger.log(persistenceFailure);
             return false;
         }
-        return true;
     }
   
     public Team loadTeamByName(String teamName) throws PersistenceFailure {

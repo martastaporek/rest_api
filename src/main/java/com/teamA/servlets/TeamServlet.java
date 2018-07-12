@@ -2,12 +2,10 @@ package com.teamA.servlets;
 
 import com.teamA.customExceptions.JsonFailure;
 import com.teamA.customExceptions.PersistenceFailure;
-import com.teamA.data.player.Player;
-import com.teamA.data.player.PlayerService;
 import com.teamA.data.team.Team;
 import com.teamA.data.team.TeamService;
 import com.teamA.parsers.JsonParser;
-import com.teamA.servletHelper.RequestDataRetriver;
+import com.teamA.servletHelper.RequestDataRetriever;
 import com.teamA.supplier.Supplier;
 
 import javax.servlet.ServletException;
@@ -56,7 +54,7 @@ public class TeamServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TeamService teamService = Supplier.deliverTeamService(TeamService.class);
 
-        RequestDataRetriver dataRetriever = Supplier.deliverRequestDataRetriver();
+        RequestDataRetriever dataRetriever = Supplier.deliverRequestDataRetriever();
         String dataFromRequest = dataRetriever.getDataFromRequest(req);
 
         try {
@@ -76,7 +74,7 @@ public class TeamServlet extends HttpServlet {
 
         try {
             team = getTeamFromRequestData(id);
-            String dataFromRequest = Supplier.deliverRequestDataRetriver().getDataFromRequest(req);
+            String dataFromRequest = Supplier.deliverRequestDataRetriever().getDataFromRequest(req);
             Team teamFromRequest = Supplier.deliverJsonParser().parse(dataFromRequest, Team.class);
 
             if(!(team.getName().equals(teamFromRequest.getName()))){
@@ -102,7 +100,7 @@ public class TeamServlet extends HttpServlet {
 
         try {
             team = getTeamFromRequestData(id);
-            String dataFromRequest = Supplier.deliverRequestDataRetriver().getDataFromRequest(req);
+            String dataFromRequest = Supplier.deliverRequestDataRetriever().getDataFromRequest(req);
             Team teamFromRequest = Supplier.deliverJsonParser().parse(dataFromRequest, Team.class);
 
         } catch (PersistenceFailure | JsonFailure failure) {
