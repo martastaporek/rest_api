@@ -1,6 +1,5 @@
 package com.teamA;
 
-
 public class RootImpl implements Root {
 
     public static Root getInstance() {
