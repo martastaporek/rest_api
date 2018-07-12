@@ -10,4 +10,5 @@ public interface TeamService {
     boolean registerPlayer(String teamId, String playerId);
     Team loadTeam (String id) throws PersistenceFailure;
     List<Team> loadAllTeams() throws PersistenceFailure;
+    boolean changeName(String teamId, String teamName) throws PersistenceFailure;
 }

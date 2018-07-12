@@ -91,4 +91,17 @@ public class TeamServiceImpl implements TeamService {
         }
 
     }
+
+    @Override
+    public boolean changeName(String teamId, String teamName) throws PersistenceFailure {
+        try {
+            Team team = loadTeam(teamId);
+            team.setName(teamName);
+            serviceTransactionHelper.updateEntity(team);
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
+            return false;
+        }
+        return true;
+    }
 }
