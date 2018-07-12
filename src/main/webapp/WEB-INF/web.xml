@@ -32,6 +32,15 @@
         <url-pattern>/matches/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>TeamServlet</servlet-name>
+        <servlet-class>com.teamA.servlets.TeamServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TeamServlet</servlet-name>
+        <url-pattern>/teams/*</url-pattern>
+    </servlet-mapping>
+
     <resource-ref>
         <res-ref-name>localhost/mundialdb</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
