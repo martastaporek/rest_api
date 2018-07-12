@@ -15,9 +15,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import javax.persistence.EntityManager;
-import javax.xml.stream.events.Characters;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class PersistenceManager implements PersistenceFiller, PersistenceCleaner {
 
