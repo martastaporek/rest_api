@@ -5,7 +5,8 @@ import com.teamA.logger.Logger;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
-import java.util.Calendar;
+import javax.persistence.TypedQuery;
+import java.util.*;
 
 public class PlayerServiceImpl implements PlayerService {
 
@@ -101,8 +102,32 @@ public class PlayerServiceImpl implements PlayerService {
             return player;
         } catch (NumberFormatException | PersistenceFailure ex) {
             logger.log(ex);
-            String failureInfo = String.format("the player with id %s could not be created", id);
+            String failureInfo = String.format("the player with id %s could not be loaded", id);
             throw new PersistenceFailure(failureInfo);
+        }
+    }
+
+    @Override
+    public Collection<Player> getAllPlayers() throws PersistenceFailure {
+        try {
+            TypedQuery query = entityManager.createQuery("SELECT e FROM player e", Player.class);
+            @SuppressWarnings("unchecked")
+            List<Player> players = query.getResultList();
+            return players;
+        } catch (Exception e) {
+            logger.log(e);
+            throw new PersistenceFailure(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean removePlayer(String playerId) {
+        try {
+            serviceTransactionHelper.removeEntity(playerId, Player.class);
+            return true;
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
+            return false;
         }
     }
 }

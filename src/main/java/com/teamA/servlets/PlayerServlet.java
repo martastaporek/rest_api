@@ -4,6 +4,7 @@ import com.teamA.customExceptions.JsonFailure;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.player.Player;
 import com.teamA.data.player.PlayerService;
+import com.teamA.data.player.PlayerServiceImpl;
 import com.teamA.parsers.JsonParser;
 import com.teamA.supplier.Supplier;
 import com.teamA.servletHelper.RequestDataRetriever;
@@ -24,9 +25,7 @@ public class PlayerServlet extends HttpServlet {
         String id = getIdFromRequestData(req);
 
         if(id == null || id.equals("/")) {
-            // todo miejsce dla wyciagania wszystkich zawodników
-
-
+            // todo
         } else {
             Player player;
             try {
