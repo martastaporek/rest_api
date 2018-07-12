@@ -68,6 +68,30 @@ public class TeamServlet extends HttpServlet {
             failure.printStackTrace();
         }
     }
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        TeamService teamService = Supplier.deliverTeamService(TeamService.class);
+        String id = getIdFromRequestData(req);
+        Team team;
+
+        try {
+            team = getTeamFromRequestData(id);
+            String dataFromRequest = Supplier.deliverRequestDataRetriver().getDataFromRequest(req);
+            Team teamFromRequest = Supplier.deliverJsonParser().parse(dataFromRequest, Team.class);
+
+            if(!(team.getName().equals(teamFromRequest.getName()))){
+                teamService.changeName(String.valueOf(team.getId()), teamFromRequest.getName());
+            }
+
+
+
+        } catch (PersistenceFailure | JsonFailure failure) {
+            failure.printStackTrace();
+            resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/teams/{id}");
+            return;
+        }
+
+    }
 
     private List<Team> getAllTeams() throws PersistenceFailure {
         TeamService teamService = Supplier.deliverTeamService(TeamService.class);
