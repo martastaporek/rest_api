@@ -1,7 +1,6 @@
 package com.teamA.data.match;
 
 import com.teamA.customExceptions.PersistenceFailure;
-import com.teamA.data.player.Player;
 import com.teamA.data.team.Team;
 import com.teamA.data.team.TeamService;
 import com.teamA.logger.Logger;
@@ -58,6 +57,10 @@ public class MatchServiceImpl implements MatchService {
                 score = match.getFirstTeamScore();
                 match.setFirstTeamScore(++score);
             } else {
+                Team secondTeam = match.getSecondTeam();
+                if (shooters.getId() != secondTeam.getId()) {
+                    throw new PersistenceFailure("There's no such team in this match!");
+                }
                 score = match.getSecondTeamScore();
                 match.setSecondTeamScore(++score);
             }

@@ -2,6 +2,9 @@ package com.teamA.databaseRejuvenator;
 
 import com.github.javafaker.Faker;
 import com.teamA.customExceptions.PersistenceFailure;
+import com.teamA.data.match.Match;
+import com.teamA.data.match.MatchService;
+import com.teamA.data.match.MatchServiceImpl;
 import com.teamA.data.player.Player;
 import com.teamA.data.player.PlayerService;
 import com.teamA.data.player.PlayerServiceImpl;
@@ -47,6 +50,8 @@ public class PersistenceManager implements PersistenceFiller, PersistenceCleaner
         createDutchTeam();
         createSpanishTeam();
         createFrenchTeam();
+
+        registerMatches();
 
         System.out.println("Done - DB populated!");
         System.exit(0);
@@ -121,6 +126,39 @@ public class PersistenceManager implements PersistenceFiller, PersistenceCleaner
         TeamService teamService = factory.createTeamService(TeamServiceImpl.class);
         Team englishTeam = teamService.createTeam("England");
         handleTeamCreation(new Faker(new Locale("en-GB")), englishTeam, 11, true);
+    }
+
+    private void registerMatches() throws PersistenceFailure {
+        TeamService teamService = factory.createTeamService(TeamServiceImpl.class);
+        MatchService matchService = factory.createMatchService(MatchServiceImpl.class);
+
+        Team polishTeam = teamService.loadTeamByName("Poland");
+        Team englishTeam = teamService.loadTeamByName("England");
+        Team dutchTeam = teamService.loadTeamByName("Dutch");
+        Team germanTeam = teamService.loadTeamByName("Germany");
+        Team franchTeam = teamService.loadTeamByName("France");
+        Team spanishTeam = teamService.loadTeamByName("Spain");
+
+        Date today = new Date();
+        handleMatchCreation(polishTeam, englishTeam, "Krakow", today, matchService);
+        handleMatchCreation(dutchTeam, germanTeam, "Warsaw", today, matchService);
+        handleMatchCreation(franchTeam, spanishTeam, "Katowice", today, matchService);
+
+    }
+
+
+    private void handleMatchCreation(Team firstTeam, Team secondTeam, String location, Date date,
+                                         MatchService matchService) throws PersistenceFailure {
+
+        Random chaos = new Random();
+        int maxGoals = 6;
+        String firstTeamScore = String.valueOf(chaos.nextInt(maxGoals));
+        String secondTeamScore = String.valueOf(chaos.nextInt(maxGoals));
+        Match match = matchService.createMatch(firstTeam, secondTeam, location);
+        String matchId = String.valueOf(match.getId());
+        matchService.registerScore(matchId, firstTeamScore, secondTeamScore);
+        matchService.registerDate(matchId, date);
+
     }
 
     private void handleTeamCreation(Faker faker, Team team, int numberOfPlayers, boolean isMaleTeam)
