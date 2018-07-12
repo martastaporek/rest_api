@@ -69,7 +69,12 @@ public class MatchServlet extends HttpServlet {
 
         try {
             Match match = Supplier.deliverJsonParser().parse(dataFromRequest, Match.class);
-            matchService.createMatch(match.getFirstTeam(), match.getSecondTeam(), match.getLocation());
+            Team firstTeam = Supplier.deliverTeamService(TeamService.class)
+                    .loadTeamByName(match.getFirstTeam().getName());
+            Team secondTeam = Supplier.deliverTeamService(TeamService.class)
+                    .loadTeamByName(match.getSecondTeam().getName());
+
+            matchService.createMatch(firstTeam, secondTeam, match.getLocation());
         } catch (PersistenceFailure | JsonFailure failure) {
             failure.printStackTrace();
         }
@@ -97,6 +102,7 @@ public class MatchServlet extends HttpServlet {
                         .loadTeamByName(matchFromRequest
                                 .getSecondTeam()
                                 .getName());
+
                 matchFromRequest.setFirstTeam(firstTeam);
                 matchFromRequest.setSecondTeam(secondTeam);
 
