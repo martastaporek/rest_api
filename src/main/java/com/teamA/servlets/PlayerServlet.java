@@ -47,14 +47,6 @@ public class PlayerServlet extends HttpServlet {
         }
     }
 
-    private String getIdFromRequestData(HttpServletRequest req) {
-        String pathInfo = req.getPathInfo();
-        if(pathInfo.equals("/")) {
-            pathInfo = "";
-        }
-        return pathInfo;
-    }
-
     private Player getPlayerFromRequestData(String id) throws PersistenceFailure {
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
         return playerService.loadPlayer(id);
@@ -79,7 +71,8 @@ public class PlayerServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
-        String id = getIdFromRequestData(req);
+        String id = req.getPathInfo();
+        id = id.replace("/","");
         Player player;
         try {
             player = getPlayerFromRequestData(id);
