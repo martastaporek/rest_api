@@ -24,8 +24,8 @@ public class TeamServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
         JsonParser jsonParser = Supplier.deliverJsonParser();
         resp.setContentType("application/json");
-        String id = getIdFromRequestData(req);
-        if(id.equals("")) {
+        String id = req.getPathInfo();
+        if(id == null || id.equals("/")) {
             try {
 
                 List<Team> teams = getAllTeams();
@@ -36,6 +36,7 @@ public class TeamServlet extends HttpServlet {
                 return;
             }
         } else {
+            id = id.replace("/", "");
             Team team;
             try {
                 team = getTeamFromRequestData(id);
