@@ -100,10 +100,9 @@ public class TeamServlet extends HttpServlet {
 
         try {
             team = getTeamFromRequestData(id);
-            String dataFromRequest = Supplier.deliverRequestDataRetriever().getDataFromRequest(req);
-            Team teamFromRequest = Supplier.deliverJsonParser().parse(dataFromRequest, Team.class);
+            teamService.deleteTeam(String.valueOf(team.getId()));
 
-        } catch (PersistenceFailure | JsonFailure failure) {
+        } catch (PersistenceFailure failure) {
             failure.printStackTrace();
             res.sendError(400, "Wrong URL! Usage: http://localhost:8080/teams/{id}");
             return;
