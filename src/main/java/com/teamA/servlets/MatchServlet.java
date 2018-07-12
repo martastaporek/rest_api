@@ -4,7 +4,6 @@ import com.teamA.customExceptions.JsonFailure;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.match.Match;
 import com.teamA.data.match.MatchService;
-import com.teamA.servletHelper.RequestDataRetriver;
 import com.teamA.supplier.Supplier;
 
 import javax.servlet.ServletException;
@@ -22,9 +21,7 @@ public class MatchServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         MatchService matchService = Supplier.deliverMatchService(MatchService.class);
-        RequestDataRetriver dataRetriever = Supplier.deliverRequestDataRetriver();
-
-        String dataFromRequest = dataRetriever.getDataFromRequest(req);
+        String dataFromRequest = Supplier.deliverRequestDataRetriever().getDataFromRequest(req);
 
         try {
             Match match = Supplier.deliverJsonParser().parse(dataFromRequest, Match.class);
