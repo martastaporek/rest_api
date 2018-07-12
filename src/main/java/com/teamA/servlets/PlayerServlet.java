@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 public class PlayerServlet extends HttpServlet {
 
@@ -22,11 +23,18 @@ public class PlayerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JsonParser jsonParser = Supplier.deliverJsonParser();
         resp.setContentType("application/json");
-        String id = getIdFromRequestData(req);
-
+        resp.setCharacterEncoding("UTF-8");
+        String id = req.getPathInfo();
         if(id == null || id.equals("/")) {
-            // todo
+            List<Player> playerList;
+            try {
+                playerList = Supplier.deliverPlayerService(PlayerService.class).getAllPlayers();
+                resp.getWriter().println(jsonParser.parseList(playerList));
+            } catch (PersistenceFailure| JsonFailure  failure) {
+                failure.printStackTrace();
+            }
         } else {
+            id = id.replace("/", "");
             Player player;
             try {
                 player = getPlayerFromRequestData(id);
@@ -41,7 +49,10 @@ public class PlayerServlet extends HttpServlet {
 
     private String getIdFromRequestData(HttpServletRequest req) {
         String pathInfo = req.getPathInfo();
-        return pathInfo.replace("/", "");
+        if(pathInfo.equals("/")) {
+            pathInfo = "";
+        }
+        return pathInfo;
     }
 
     private Player getPlayerFromRequestData(String id) throws PersistenceFailure {
