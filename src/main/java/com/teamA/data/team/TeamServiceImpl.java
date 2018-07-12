@@ -7,6 +7,8 @@ import com.teamA.logger.Logger;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TeamServiceImpl implements TeamService {
 
@@ -71,5 +73,22 @@ public class TeamServiceImpl implements TeamService {
             String failureInfo = String.format("the team with id %s does not exist", id);
             throw new PersistenceFailure(failureInfo);
         }
+    }
+
+    @Override
+    public List <Team> loadAllTeams() throws PersistenceFailure{
+
+
+        try {
+            List <Team> teams = entityManager.createQuery("select t from team t ", Team.class).getResultList();
+            if(teams == null){
+                throw new PersistenceFailure();
+            }
+            return teams;
+        }catch (PersistenceFailure ex){
+            logger.log(ex);
+            throw new PersistenceFailure();
+        }
+
     }
 }
