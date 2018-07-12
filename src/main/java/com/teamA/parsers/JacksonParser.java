@@ -6,6 +6,7 @@ import com.teamA.customExceptions.JsonFailure;
 import com.teamA.data.AbstractEntity;
 
 import java.io.IOException;
+import java.util.List;
 
 public class JacksonParser implements JsonParser {
 
@@ -23,6 +24,15 @@ public class JacksonParser implements JsonParser {
     public <T extends AbstractEntity> String parse(T entity) throws JsonFailure {
         try {
             return mapper.writeValueAsString(entity);
+        } catch (JsonProcessingException e) {
+            throw new JsonFailure(e.getMessage());
+        }
+    }
+
+    @Override
+    public <T extends AbstractEntity> String parse(List<T> entityList) throws JsonFailure {
+        try {
+            return mapper.writeValueAsString(entityList);
         } catch (JsonProcessingException e) {
             throw new JsonFailure(e.getMessage());
         }
