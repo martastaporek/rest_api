@@ -15,6 +15,6 @@ public interface MatchService {
     boolean setLocation(String matchId, String location);
     Match loadMatch(String matchId) throws PersistenceFailure;
     List<Match> loadAll() throws PersistenceFailure;
-    boolean removeMatch(String matchId) throws PersistenceFailure;
+    boolean removeMatch(String matchId);
 
 }

@@ -48,6 +48,21 @@ public class MatchServlet extends HttpServlet {
     }
 
     @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getPathInfo();
+        if(id == null || id.equals("/")) {
+            resp.sendError(405, "Method not allowed for this URL");
+            return;
+        } else {
+            id = id.replace("/", "");
+            if(!Supplier.deliverMatchService(MatchService.class).removeMatch(id)) {
+                resp.sendError(409,"Conflict! Couldn't update score of the match");
+                return;
+            }
+        }
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         MatchService matchService = Supplier.deliverMatchService(MatchService.class);
         String dataFromRequest = Supplier.deliverRequestDataRetriever().getDataFromRequest(req);
@@ -65,6 +80,7 @@ public class MatchServlet extends HttpServlet {
         String id = req.getPathInfo();
         if(id == null || id.equals("/")) {
             resp.sendError(405, "Method not allowed for this URL");
+            return;
         } else {
             id = id.replace("/", "");
             Match match;
