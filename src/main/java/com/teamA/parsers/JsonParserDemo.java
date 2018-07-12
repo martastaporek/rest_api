@@ -21,8 +21,8 @@ public class JsonParserDemo {
 
             System.out.println(playerAsString);
 
-        } catch (PersistenceFailure e) {
-            e.printStackTrace();
+        } catch (PersistenceFailure | JsonFailure failure) {
+            failure.printStackTrace();
         }
     }
 }

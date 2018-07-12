@@ -1,6 +1,5 @@
 package com.teamA.servlets;
 
-import com.google.gson.JsonObject;
 import com.teamA.customExceptions.JsonFailure;
 import com.teamA.customExceptions.PersistenceFailure;
 import com.teamA.data.player.Player;
@@ -32,8 +31,8 @@ public class PlayerServlet extends HttpServlet {
             try {
                 player = getPlayerFromRequestData(id);
                 out.println(jsonParser.parse(player));
-            } catch (PersistenceFailure ex) {
-                ex.printStackTrace();
+            } catch (PersistenceFailure | JsonFailure failure) {
+                failure.printStackTrace();
                 resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
                 return;
             }
@@ -55,12 +54,14 @@ public class PlayerServlet extends HttpServlet {
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
 
         String dataFromRequest = getDataFromRequest(req);
-        Player player = parseJsonToPlayer(dataFromRequest);
 
         try {
+            Player player = Supplier.deliverJsonParser()
+                    .parse(dataFromRequest, Player.class);
+
             playerService.createPlayer(player.getFirstName(), player.getLastName(), String.valueOf(player.getBirthYear()));
-        } catch (PersistenceFailure persistenceFailure) {
-            persistenceFailure.printStackTrace();
+        } catch (PersistenceFailure | JsonFailure failure) {
+            failure.printStackTrace();
         }
     }
 
@@ -74,13 +75,6 @@ public class PlayerServlet extends HttpServlet {
         return sb.toString();
     }
 
-    private Player parseJsonToPlayer(String dataFromRequest) {
-        JsonParser jsonParser = Supplier.deliverJsonParser();
-        JsonObject jsonObject = jsonParser.parse(dataFromRequest);
-        return jsonParser.parse(jsonObject, Player.class);
-
-    }
-
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
@@ -88,21 +82,21 @@ public class PlayerServlet extends HttpServlet {
         Player player;
         try {
             player = getPlayerFromRequestData(id);
-        } catch (PersistenceFailure persistenceFailure) {
-            persistenceFailure.printStackTrace();
+            String dataFromRequest = getDataFromRequest(req);
+            Player playerFromRequest = Supplier.deliverJsonParser()
+                    .parse(dataFromRequest, Player.class);
+
+            if(!(player.getFirstName().equals(playerFromRequest.getFirstName())) && playerFromRequest.getFirstName() != null) {
+                playerService.changeFirstName(String.valueOf(player.getId()), playerFromRequest.getFirstName());
+            }
+
+            if(!(player.getLastName().equals(playerFromRequest.getLastName())) && playerFromRequest.getLastName() != null) {
+                playerService.changeLastName(String.valueOf(player.getId()), playerFromRequest.getLastName());
+            }
+        } catch (PersistenceFailure | JsonFailure failure) {
+            failure.printStackTrace();
             resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
             return;
-        }
-
-        String dataFromRequest = getDataFromRequest(req);
-        Player playerFromRequest = parseJsonToPlayer(dataFromRequest);
-
-        if(!(player.getFirstName().equals(playerFromRequest.getFirstName())) && playerFromRequest.getFirstName() != null) {
-            playerService.changeFirstName(String.valueOf(player.getId()), playerFromRequest.getFirstName());
-        }
-
-        if(!(player.getLastName().equals(playerFromRequest.getLastName())) && playerFromRequest.getLastName() != null) {
-            playerService.changeLastName(String.valueOf(player.getId()), playerFromRequest.getLastName());
         }
     }
 }

@@ -1,18 +1,5 @@
 package com.teamA.servlets;
 
-
-
-
-
-import com.teamA.customExceptions.PersistenceFailure;
-import com.teamA.data.player.Player;
-import com.teamA.data.player.PlayerService;
-import com.teamA.data.player.PlayerServiceImpl;
-import com.teamA.data.team.TeamService;
-import com.teamA.data.team.TeamServiceImpl;
-import com.teamA.servletSupplier.Supplier;
-
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

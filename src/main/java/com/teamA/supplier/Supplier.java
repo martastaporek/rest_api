@@ -1,6 +1,5 @@
 package com.teamA.supplier;
 
-import com.google.gson.Gson;
 import com.teamA.data.match.MatchService;
 import com.teamA.data.player.PlayerService;
 import com.teamA.data.team.TeamService;
@@ -8,7 +7,7 @@ import com.teamA.helpers.DateTimer;
 import com.teamA.helpers.DateTimerImpl;
 import com.teamA.logger.*;
 import com.teamA.parsers.JsonParser;
-import com.teamA.parsers.JsonParserImpl;
+import com.teamA.parsers.JacksonParser;
 import com.teamA.serviceFactory.ServiceFactory;
 import com.teamA.serviceFactory.ServiceFactoryImpl;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
@@ -86,7 +85,7 @@ public class Supplier {
 
     public static JsonParser deliverJsonParser() {
         if (jsonParser == null) {
-            jsonParser = new JsonParserImpl(new Gson(), new com.google.gson.JsonParser());
+            jsonParser = JacksonParser.create();
         }
         return jsonParser;
     }
