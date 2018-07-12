@@ -1,12 +1,14 @@
 package com.teamA.data.match;
 
 import com.teamA.customExceptions.PersistenceFailure;
+import com.teamA.data.player.Player;
 import com.teamA.data.team.Team;
 import com.teamA.data.team.TeamService;
 import com.teamA.logger.Logger;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.Date;
 import java.util.List;
 
@@ -45,49 +47,25 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public boolean registerGoal(Match match, Team shooters) {
-
-        int score;
-        Team team = match.getFirstTeam();
-        if (shooters.getId() == team.getId()) {
-            score = match.getFirstTeamScore();
-            match.setFirstTeamScore(++score);
-        } else {
-            score = match.getSecondTeamScore();
-            match.setSecondTeamScore(++score);
-        }
-        return serviceTransactionHelper.updateEntity(match);
-    }
-
-    @Override
     public boolean registerGoal(String matchId, String teamId) {
 
         try {
             Match match = loadMatch(matchId);
-            Team team = null;  // todo need dependency to TeamService
-
+            Team shooters = teamService.loadTeam(teamId);
+            int score;
+            Team team = match.getFirstTeam();
+            if (shooters.getId() == team.getId()) {
+                score = match.getFirstTeamScore();
+                match.setFirstTeamScore(++score);
+            } else {
+                score = match.getSecondTeamScore();
+                match.setSecondTeamScore(++score);
+            }
+            return serviceTransactionHelper.updateEntity(match);
         } catch (PersistenceFailure persistenceFailure) {
             logger.log(persistenceFailure);
             return false;
         }
-        return true;
-    }
-
-    @Override
-    public boolean registerScore(Match match, String firstTeamScore, String secondTeamScore) {
-
-        try {
-            int firstTeamScoreAsInt = Integer.parseInt(firstTeamScore);
-            int secondTeamScoreAsInt = Integer.parseInt(secondTeamScore);
-
-            match.setFirstTeamScore(firstTeamScoreAsInt);
-            match.setSecondTeamScore(secondTeamScoreAsInt);
-
-        } catch (NumberFormatException ex) {
-            logger.log(ex.getMessage());
-            return false;
-        }
-        return serviceTransactionHelper.updateEntity(match);
     }
 
     @Override
@@ -95,10 +73,14 @@ public class MatchServiceImpl implements MatchService {
 
         try {
             Match match = loadMatch(matchId);
-            return registerScore(match, firstTeamScore, secondTeamScore);
+            int firstTeamScoreAsInt = Integer.parseInt(firstTeamScore);
+            int secondTeamScoreAsInt = Integer.parseInt(secondTeamScore);
+            match.setFirstTeamScore(firstTeamScoreAsInt);
+            match.setSecondTeamScore(secondTeamScoreAsInt);
+            return serviceTransactionHelper.updateEntity(match);
 
-        } catch (PersistenceFailure persistenceFailure) {
-            logger.log(persistenceFailure);
+        } catch (Exception ex) {
+            logger.log(ex);
             return false;
         }
     }
@@ -106,23 +88,26 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public boolean registerDate(String matchId, Date date) {
 
-        return false;
+        try {
+            Match match = loadMatch(matchId);
+            match.setDate(date);
+            return serviceTransactionHelper.updateEntity(match);
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
+            return false;
+        }
     }
 
     @Override
-    public boolean registerDate(Match match, Date date) {
-        return false;
-    }
-
-    @Override
-    public boolean changeLocation(Match match, String location) {
-        match.setLocation(location);
-        return serviceTransactionHelper.updateEntity(match);
-    }
-
-    @Override
-    public boolean changeLocation(String matchId, String location) {
-        return false;
+    public boolean setLocation(String matchId, String location) {
+        try {
+            Match match = loadMatch(matchId);
+            match.setLocation(location);
+            return serviceTransactionHelper.updateEntity(match);
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
+            return false;
+        }
     }
 
     @Override
@@ -143,6 +128,25 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<Match> loadAll() throws PersistenceFailure {
-        return null;
+        try {
+            TypedQuery query = entityManager.createQuery("SELECT e FROM match e", Match.class);
+            @SuppressWarnings("unchecked")
+            List<Match> matches = query.getResultList();
+            return matches;
+        } catch (Exception e) {
+            logger.log(e);
+            throw new PersistenceFailure(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean removeMatch(String matchId) {
+        try {
+            serviceTransactionHelper.removeEntity(matchId, Match.class);
+            return true;
+        } catch (PersistenceFailure persistenceFailure) {
+            logger.log(persistenceFailure);
+            return false;
+        }
     }
 }
