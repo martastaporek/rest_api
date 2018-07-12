@@ -7,7 +7,7 @@ import com.teamA.data.player.PlayerService;
 import com.teamA.data.player.PlayerServiceImpl;
 import com.teamA.parsers.JsonParser;
 import com.teamA.supplier.Supplier;
-import com.teamA.servletHelper.RequestDataRetriver;
+import com.teamA.servletHelper.RequestDataRetriever;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,23 +15,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 public class PlayerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
         JsonParser jsonParser = Supplier.deliverJsonParser();
         resp.setContentType("application/json");
-        String id = getIdFromRequestData(req);
-
+        resp.setCharacterEncoding("UTF-8");
+        String id = req.getPathInfo();
         if(id == null || id.equals("/")) {
-            // todo
+            List<Player> playerList;
+            try {
+                playerList = Supplier.deliverPlayerService(PlayerService.class).getAllPlayers();
+                resp.getWriter().println(jsonParser.parseList(playerList));
+            } catch (PersistenceFailure| JsonFailure  failure) {
+                failure.printStackTrace();
+            }
         } else {
+            id = id.replace("/", "");
             Player player;
             try {
                 player = getPlayerFromRequestData(id);
-                out.println(jsonParser.parse(player));
+                resp.getWriter().println(jsonParser.parse(player));
             } catch (PersistenceFailure | JsonFailure failure) {
                 failure.printStackTrace();
                 resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
@@ -42,7 +49,10 @@ public class PlayerServlet extends HttpServlet {
 
     private String getIdFromRequestData(HttpServletRequest req) {
         String pathInfo = req.getPathInfo();
-        return pathInfo.replace("/", "");
+        if(pathInfo.equals("/")) {
+            pathInfo = "";
+        }
+        return pathInfo;
     }
 
     private Player getPlayerFromRequestData(String id) throws PersistenceFailure {
@@ -53,7 +63,7 @@ public class PlayerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
-        RequestDataRetriver dataRetriever = Supplier.deliverRequestDataRetriver();
+        RequestDataRetriever dataRetriever = Supplier.deliverRequestDataRetriever();
         String dataFromRequest = dataRetriever.getDataFromRequest(req);
 
         try {
@@ -73,7 +83,7 @@ public class PlayerServlet extends HttpServlet {
         Player player;
         try {
             player = getPlayerFromRequestData(id);
-            String dataFromRequest = Supplier.deliverRequestDataRetriver().getDataFromRequest(req);
+            String dataFromRequest = Supplier.deliverRequestDataRetriever().getDataFromRequest(req);
             Player playerFromRequest = Supplier.deliverJsonParser()
                     .parse(dataFromRequest, Player.class);
 

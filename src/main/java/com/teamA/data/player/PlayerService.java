@@ -2,7 +2,7 @@ package com.teamA.data.player;
 
 import com.teamA.customExceptions.PersistenceFailure;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface PlayerService {
 
@@ -12,6 +12,6 @@ public interface PlayerService {
     String getAge(String playerId);
     String getFullName(String playerId);
     Player loadPlayer(String id) throws PersistenceFailure;
-    Collection<Player> getAllPlayers() throws PersistenceFailure;
+    List<Player> getAllPlayers() throws PersistenceFailure;
     boolean removePlayer(String playerId);
 }
