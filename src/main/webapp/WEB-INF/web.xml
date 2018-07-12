@@ -20,8 +20,17 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>PlayerServlet</servlet-name>
-		<url-pattern>/mundial/players/*</url-pattern>
+		<url-pattern>/players/*</url-pattern>
 	</servlet-mapping>
+
+    <servlet>
+        <servlet-name>MatchServlet</servlet-name>
+        <servlet-class>com.teamA.servlets.MatchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MatchServlet</servlet-name>
+        <url-pattern>/matches/*</url-pattern>
+    </servlet-mapping>
 
     <resource-ref>
         <res-ref-name>localhost/mundialdb</res-ref-name>

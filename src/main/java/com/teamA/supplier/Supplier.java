@@ -12,6 +12,8 @@ import com.teamA.serviceFactory.ServiceFactory;
 import com.teamA.serviceFactory.ServiceFactoryImpl;
 import com.teamA.serviceHelpers.ServiceTransactionHelper;
 import com.teamA.serviceHelpers.ServiceTransactionHelperImpl;
+import com.teamA.servletHelper.RequestDataRetriver;
+import com.teamA.servletHelper.RequestDataRetriverImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,6 +35,7 @@ public class Supplier {
     private static TeamService teamService;
     private static MatchService matchService;
     private static JsonParser jsonParser;
+    private static RequestDataRetriver dataRetriver;
 
     public static <T extends PlayerService> PlayerService deliverPlayerService(Class<T> type) {
         if (playerService == null) {
@@ -127,5 +130,12 @@ public class Supplier {
         }
 
         return serviceTransactionHelper;
+    }
+
+    public static RequestDataRetriver deliverRequestDataRetriver() {
+        if(dataRetriver == null) {
+            dataRetriver = new RequestDataRetriverImpl();
+        }
+        return dataRetriver;
     }
 }

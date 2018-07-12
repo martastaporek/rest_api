@@ -6,12 +6,12 @@ import com.teamA.data.player.Player;
 import com.teamA.data.player.PlayerService;
 import com.teamA.parsers.JsonParser;
 import com.teamA.supplier.Supplier;
+import com.teamA.servletHelper.RequestDataRetriver;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -25,7 +25,9 @@ public class PlayerServlet extends HttpServlet {
         String id = getIdFromRequestData(req);
 
         if(id == null || id.equals("/")) {
-            // miejsce dla wyciagania wszystkich zawodników
+            // todo miejsce dla wyciagania wszystkich zawodników
+
+
         } else {
             Player player;
             try {
@@ -52,8 +54,8 @@ public class PlayerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
-
-        String dataFromRequest = getDataFromRequest(req);
+        RequestDataRetriver dataRetriever = Supplier.deliverRequestDataRetriver();
+        String dataFromRequest = dataRetriever.getDataFromRequest(req);
 
         try {
             Player player = Supplier.deliverJsonParser()
@@ -65,16 +67,6 @@ public class PlayerServlet extends HttpServlet {
         }
     }
 
-    private String getDataFromRequest(HttpServletRequest req) throws IOException {
-        BufferedReader reader = req.getReader();
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while((line = reader.readLine())!= null) {
-            sb.append(line);
-        }
-        return sb.toString();
-    }
-
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PlayerService playerService = Supplier.deliverPlayerService(PlayerService.class);
@@ -82,7 +74,7 @@ public class PlayerServlet extends HttpServlet {
         Player player;
         try {
             player = getPlayerFromRequestData(id);
-            String dataFromRequest = getDataFromRequest(req);
+            String dataFromRequest = Supplier.deliverRequestDataRetriver().getDataFromRequest(req);
             Player playerFromRequest = Supplier.deliverJsonParser()
                     .parse(dataFromRequest, Player.class);
 
@@ -93,10 +85,13 @@ public class PlayerServlet extends HttpServlet {
             if(!(player.getLastName().equals(playerFromRequest.getLastName())) && playerFromRequest.getLastName() != null) {
                 playerService.changeLastName(String.valueOf(player.getId()), playerFromRequest.getLastName());
             }
+
+
         } catch (PersistenceFailure | JsonFailure failure) {
             failure.printStackTrace();
             resp.sendError(400, "Wrong URL! Usage: http://localhost:8080/players/{id}");
             return;
         }
+
     }
 }
