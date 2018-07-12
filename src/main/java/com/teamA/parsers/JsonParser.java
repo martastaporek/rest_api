@@ -1,11 +1,10 @@
 package com.teamA.parsers;
 
-import com.google.gson.JsonObject;
+import com.teamA.customExceptions.JsonFailure;
 import com.teamA.data.AbstractEntity;
 
 public interface JsonParser {
 
-    <T extends AbstractEntity> String parse(T entity);
-    <T extends AbstractEntity> T parse(JsonObject json, Class<T> entityType);
-    <T extends AbstractEntity> JsonObject parse(String jsonString);
+    <T extends AbstractEntity> String parse(T entity) throws JsonFailure;
+    <T extends AbstractEntity> T parse(String jasonEntity, Class<T> entityType) throws JsonFailure;
 }

@@ -21,8 +21,8 @@ public class ServiceTransactionHelperImpl implements ServiceTransactionHelper {
     public long getMaxFreeId() {
         try {
             return entityManager.createQuery("select max(e.id) from AbstractEntity e", Long.class).getSingleResult();
-        } catch (NullPointerException notUsed) {
-            return 1;
+        } catch (Exception notUsed) {
+            return 0;
         }
     }
 

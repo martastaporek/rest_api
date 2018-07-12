@@ -1,8 +1,10 @@
 package com.teamA.data.team;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.teamA.data.AbstractEntity;
 import com.teamA.data.player.Player;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -15,7 +17,8 @@ public class Team extends AbstractEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Player> players = new ArrayList<>();
 
     Team(String name) {
