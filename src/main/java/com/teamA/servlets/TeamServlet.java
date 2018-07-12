@@ -29,10 +29,8 @@ public class TeamServlet extends HttpServlet {
             try {
 
                 List<Team> teams = getAllTeams();
-                for(Team team: teams){
-                    out.println(team);
-                }
-            }catch (PersistenceFailure ex){
+                out.println(jsonParser.parseList(teams));
+            }catch (PersistenceFailure | JsonFailure ex){
                 ex.printStackTrace();
                 resp.sendError(400, "No players");
                 return;
